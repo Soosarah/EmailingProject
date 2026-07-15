@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Djezzy | Connexion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#101014;
+    --panel:#17151A;
+    --red:#E4102C;
+    --red-deep:#9C0A1E;
+    --ember:#FF5A36;
+    --cream:#F6F2EA;
+    --cream-dim:#C9C4B8;
+    --line:rgba(246,242,234,0.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--ink);
+    color:var(--cream);
+    display:flex;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  .stage{
+    display:flex;
+    width:100%;
+    min-height:100vh;
+  }
+
+
+  .brand-side{
+    position:relative;
+    flex:1.15;
+    background:var(--red);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:56px 64px;
+  }
+  .brand-side::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:var(--red-deep);
+    clip-path:polygon(0 0, 38% 0, 62% 100%, 0% 100%);
+    opacity:.55;
+  }
+  .brand-mark{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .brand-mark .glyph{
+    width:34px; height:34px;
+    background:var(--cream);
+    clip-path:polygon(20% 10%, 20% 90%, 85% 50%);
+  }
+  .brand-mark span{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:0.5px;
+  }
+
+  .brand-copy{
+    position:relative;
+    z-index:2;
+    max-width:420px;
+  }
+  .eyebrow{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:13px;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:var(--cream);
+    opacity:.75;
+    margin-bottom:18px;
+  }
+  .brand-copy h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:44px;
+    line-height:1.12;
+    letter-spacing:-0.5px;
+    margin-bottom:20px;
+  }
+  .brand-copy p{
+    font-size:15.5px;
+    line-height:1.6;
+    color:rgba(246,242,234,0.82);
+  }
+
+  .stat-row{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:40px;
+    margin-top:44px;
+  }
+  .stat-row div{ }
+  .stat-row .num{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:26px;
+  }
+  .stat-row .lbl{
+    font-size:12px;
+    color:rgba(246,242,234,0.68);
+    margin-top:4px;
+  }
+
+
+  .mosaic{
+    position:absolute;
+    right:-40px;
+    bottom:-40px;
+    width:420px;
+    height:420px;
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:5px;
+    z-index:1;
+    transform:rotate(-8deg);
+  }
+  .mosaic i{
+    display:block;
+    width:100%;
+    background:rgba(246,242,234,0.16);
+    border-radius:2px;
+    align-self:end;
+    animation:pulse 3.6s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:.28; }
+    50%{ opacity:.85; }
+  }
+
+
+  .form-side{
+    flex:1;
+    background:var(--panel);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:48px;
+  }
+  .form-card{
+    width:100%;
+    max-width:380px;
+  }
+  .form-card h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:26px;
+    margin-bottom:8px;
+  }
+  .form-card .sub{
+    font-size:14px;
+    color:var(--cream-dim);
+    margin-bottom:36px;
+  }
+  .field{
+    margin-bottom:20px;
+  }
+  .field label{
+    display:block;
+    font-size:12.5px;
+    font-weight:500;
+    letter-spacing:0.3px;
+    color:var(--cream-dim);
+    margin-bottom:8px;
+  }
+  .field input{
+    width:100%;
+    height:46px;
+    background:rgba(246,242,234,0.05);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:0 14px;
+    color:var(--cream);
+    font-size:14.5px;
+    font-family:'Inter',sans-serif;
+    outline:none;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .field input::placeholder{ color:rgba(246,242,234,0.32); }
+  .field input:focus{
+    border-color:var(--red);
+    background:rgba(246,242,234,0.08);
+  }
+
+  .row-between{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:28px;
+    font-size:13px;
+  }
+  .remember{
+    display:flex; align-items:center; gap:8px;
+    color:var(--cream-dim);
+  }
+  .remember input{ accent-color:var(--red); width:15px; height:15px; }
+  .row-between a{
+    color:var(--cream-dim);
+    text-decoration:none;
+    border-bottom:1px solid transparent;
+  }
+  .row-between a:hover{ color:var(--cream); border-color:var(--cream-dim); }
+
+  .btn-primary{
+    width:100%;
+    height:48px;
+    background:var(--red);
+    color:var(--cream);
+    border:none;
+    border-radius:8px;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:0.2px;
+    cursor:pointer;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .btn-primary:hover{ background:var(--ember); }
+  .btn-primary:active{ transform:scale(0.985); }
+
+  .divider{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin:28px 0;
+    color:var(--cream-dim);
+    font-size:12px;
+  }
+  .divider::before,.divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  .alt-methods{
+    display:flex;
+    gap:12px;
+  }
+  .alt-methods button{
+    flex:1;
+    height:44px;
+    background:transparent;
+    border:1px solid var(--line);
+    border-radius:8px;
+    color:var(--cream);
+    font-size:13px;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .alt-methods button:hover{
+    border-color:var(--cream-dim);
+    background:rgba(246,242,234,0.04);
+  }
+
+  .signup{
+    margin-top:32px;
+    text-align:center;
+    font-size:13.5px;
+    color:var(--cream-dim);
+  }
+  .signup a{ color:var(--red); text-decoration:none; font-weight:600; }
+  .signup a:hover{ color:var(--ember); }
+
+  @media (max-width:900px){
+    .stage{ flex-direction:column; }
+    .brand-side{ padding:40px 32px; min-height:280px; }
+    .brand-copy h1{ font-size:30px; }
+    .mosaic{ width:260px; height:260px; right:-20px; bottom:-20px; }
+    .form-side{ padding:32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <div class="brand-side">
+    <div class="brand-mark">
+      <div class="glyph"></div>
+      <span>djezzy</span>
+    </div>
+
+    <div class="brand-copy">
+      <div class="eyebrow">Espace client</div>
+      <h1>Restez connectés,<br>partout en Algérie.</h1>
+      <p>Gérez votre ligne, suivez votre consommation et rechargez en toute simplicité depuis votre espace personnel.</p>
+      <div class="stat-row">
+        <div><div class="num">48</div><div class="lbl">wilayas couvertes</div></div>
+        <div><div class="num">4G+</div><div class="lbl">réseau national</div></div>
+        <div><div class="num">24/7</div><div class="lbl">assistance client</div></div>
+      </div>
+    </div>
+
+    <div class="mosaic" id="mosaic"></div>
+  </div>
+
+  <div class="form-side">
+    <div class="form-card">
+      <h2>Connexion</h2>
+      <p class="sub">Accédez à votre espace Djezzy.</p>
+
+      <div class="field">
+        <label for="phone">Numéro de téléphone</label>
+        <input id="phone" type="tel" placeholder="07 XX XX XX XX">
+      </div>
+
+      <div class="field">
+        <label for="pass">Mot de passe</label>
+        <input id="pass" type="password" placeholder="••••••••">
+      </div>
+
+      <div class="row-between">
+        <label class="remember">
+          <input type="checkbox">
+          Se souvenir de moi
+        </label>
+        <a href="#">Mot de passe oublié ?</a>
+      </div>
+
+      <button class="btn-primary" type="button">Se connecter</button>
+
+      <div class="divider">ou continuer avec</div>
+
+      <div class="alt-methods">
+        <button type="button">Code SMS</button>
+        <button type="button">Identifiant e-Djezzy</button>
+      </div>
+
+      <p class="signup">Pas encore de compte ? <a href="#">Créer un compte</a></p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const mosaic = document.getElementById('mosaic');
+  const cols = 12, rows = 12;
+  for(let i=0;i<cols*rows;i++){
+    const bar = document.createElement('i');
+    const h = 8 + Math.round(Math.random()*34);
+    bar.style.height = h + 'px';
+    bar.style.animationDelay = (Math.random()*3.6).toFixed(2) + 's';
+    mosaic.appendChild(bar);
+  }
+</script>
+
+</body>
+</html>
