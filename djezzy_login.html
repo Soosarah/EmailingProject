@@ -303,7 +303,7 @@
     </div>
 
     <div class="brand-copy">
-      <div class="eyebrow">Espace client</div>
+      <div class="eyebrow">Espace Admin</div>
       <h1>Restez connectés,<br>partout en Algérie.</h1>
       <p>Gérez votre ligne, suivez votre consommation et rechargez en toute simplicité depuis votre espace personnel.</p>
       <div class="stat-row">
@@ -322,8 +322,8 @@
       <p class="sub">Accédez à votre espace Djezzy.</p>
 
       <div class="field">
-        <label for="phone">Numéro de téléphone</label>
-        <input id="phone" type="tel" placeholder="07 XX XX XX XX">
+        <label for="email">Adresse e-mail</label>
+        <input id="email" type="email" placeholder="admin@djezzy.dz">
       </div>
 
       <div class="field">
@@ -339,7 +339,9 @@
         <a href="#">Mot de passe oublié ?</a>
       </div>
 
-      <button class="btn-primary" type="button">Se connecter</button>
+      <p id="login-error" style="color:#FF5A36; font-size:13px; margin:-14px 0 18px; display:none;"></p>
+
+      <button class="btn-primary" type="button" id="login-btn">Se connecter</button>
 
       <div class="divider">ou continuer avec</div>
 
@@ -364,6 +366,71 @@
     bar.style.animationDelay = (Math.random()*3.6).toFixed(2) + 's';
     mosaic.appendChild(bar);
   }
+
+
+  const API_BASE = 'http://localhost:5000';
+
+  const loginBtn = document.getElementById('login-btn');
+  const emailInput = document.getElementById('email');
+  const passInput = document.getElementById('pass');
+  const errorEl = document.getElementById('login-error');
+
+  function showError(message) {
+    errorEl.textContent = message;
+    errorEl.style.display = 'block';
+  }
+
+  function clearError() {
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
+  }
+
+  async function handleLogin() {
+    clearError();
+    const email = emailInput.value.trim();
+    const password = passInput.value;
+
+    if (!email || !password) {
+      showError('Veuillez remplir tous les champs.');
+      return;
+    }
+
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Connexion...';
+
+    try {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        showError(data.error || 'Échec de la connexion.');
+        return;
+      }
+
+    
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+  
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      console.error(err);
+      showError('Impossible de contacter le serveur.');
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Se connecter';
+    }
+  }
+
+  loginBtn.addEventListener('click', handleLogin);
+  passInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
 </script>
 
 </body>
