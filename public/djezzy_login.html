@@ -408,7 +408,7 @@
       const data = await response.json();
 
       if (!response.ok) {
-        showError(data.error || 'Échec de la connexion.');
+        showError(data.message || 'Échec de la connexion.');
         return;
       }
 

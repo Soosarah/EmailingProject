@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Djezzy Admin Dashboard</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#101014;
+    color:white;
+}
+
+header{
+    background:#E4102C;
+    padding:20px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+button{
+    background:white;
+    color:#E4102C;
+    border:none;
+    padding:10px 20px;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+main{
+    padding:40px;
+}
+
+.card{
+    background:#17151A;
+    padding:30px;
+    border-radius:10px;
+    margin-top:20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h2>Djezzy Admin</h2>
+
+<button id="logoutBtn">
+Déconnexion
+</button>
+
+</header>
+
+<main>
+
+<h1>Bienvenue 👋</h1>
+
+<div class="card">
+
+<h3 id="name"></h3>
+
+<p id="email"></p>
+
+<p id="role"></p>
+
+</div>
+
+</main>
+
+<script>
+
+const token = localStorage.getItem("token");
+
+if(!token){
+    window.location.href="djezzy_login.html";
+}
+
+const user = JSON.parse(localStorage.getItem("user"));
+
+document.getElementById("name").textContent =
+user.first_name + " " + user.last_name;
+
+document.getElementById("email").textContent =
+user.email;
+
+document.getElementById("role").textContent =
+"Role : " + user.role;
+
+document.getElementById("logoutBtn").addEventListener("click",()=>{
+
+localStorage.removeItem("token");
+localStorage.removeItem("user");
+
+window.location.href="djezzy_login.html";
+
+});
+
+</script>
+
+</body>
+</html>

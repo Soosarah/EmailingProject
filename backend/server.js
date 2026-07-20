@@ -1,3 +1,6 @@
+
+const path = require("path");
+const authRoutes = require("./routes/authRoutes");
 const { findUserByEmail } = require("./models/userModel");
 const express = require("express");
 const cors = require("cors");
@@ -7,6 +10,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "../public")));
+app.use("/api/auth", authRoutes);
 
 const pool = require("./config/db");
 
