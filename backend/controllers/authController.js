@@ -95,8 +95,42 @@ async function login(req, res) {
         });
     }
 }
+async function requestPasswordReset(req, res) {
+    try {
+        const { email } = req.body;
 
+        // Check if the user exists
+        const user = await pool.query(
+            "SELECT id, email FROM users WHERE email = $1",
+            [email]
+        );
+
+        if (user.rows.length === 0) {
+            return res.status(404).json({
+                message: "No account found with this email."
+            });
+        }
+
+        // Save the reset request
+        await pool.query(
+            `INSERT INTO password_reset_requests (user_id, email)
+             VALUES ($1, $2)`,
+            [user.rows[0].id, user.rows[0].email]
+        );
+
+        res.status(200).json({
+            message: "Your password reset request has been sent to the administrator."
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+}
 module.exports = {
     register,
-    login
+    login,
+    requestPasswordReset
 };
