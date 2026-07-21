@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Djezzy | Connexion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="stage">
+
+  <div class="brand-side">
+    <div class="brand-mark">
+      <div class="glyph"></div>
+      <span>djezzy</span>
+    </div>
+
+    <div class="brand-copy">
+      <div class="eyebrow">Espace Admin</div>
+      <h1>Restez connectés,<br>partout en Algérie.</h1>
+      <p>Gérez votre ligne, suivez votre consommation et rechargez en toute simplicité depuis votre espace personnel.</p>
+      <div class="stat-row">
+        <div><div class="num">48</div><div class="lbl">wilayas couvertes</div></div>
+        <div><div class="num">4G+</div><div class="lbl">réseau national</div></div>
+        <div><div class="num">24/7</div><div class="lbl">assistance client</div></div>
+      </div>
+    </div>
+
+    <div class="mosaic" id="mosaic"></div>
+  </div>
+
+  <div class="form-side">
+    <div class="form-card">
+      <h2>Connexion</h2>
+      <p class="sub">Accédez à votre espace Djezzy.</p>
+
+      <div class="field">
+        <label for="email">Adresse e-mail</label>
+        <input id="email" type="email" placeholder="admin@djezzy.dz">
+      </div>
+
+      <div class="field">
+        <label for="pass">Mot de passe</label>
+        <input id="pass" type="password" placeholder="••••••••">
+      </div>
+
+      <div class="row-between">
+        <label class="remember">
+          <input type="checkbox">
+          Se souvenir de moi
+        </label>
+        <a href="#">Mot de passe oublié ?</a>
+      </div>
+
+      <p id="login-error" style="color:#FF5A36; font-size:13px; margin:-14px 0 18px; display:none;"></p>
+
+      <button class="btn-primary" type="button" id="login-btn">Se connecter</button>
+
+      <div class="divider">ou continuer avec</div>
+
+      <div class="alt-methods">
+        <button type="button">Code SMS</button>
+        <button type="button">Identifiant e-Djezzy</button>
+      </div>
+
+      <p class="signup">Pas encore de compte ? <a href="#">Créer un compte</a></p>
+    </div>
+  </div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>

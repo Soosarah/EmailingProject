@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const pool = require("../config/db");
+const { addLog } = require("../models/auditModel");
 
 async function register(req, res) {
     try {
@@ -75,7 +76,13 @@ async function login(req, res) {
                 expiresIn: "24h"
             }
         );
-
+        await addLog(
+    user.id,
+    "LOGIN",
+    "USER",
+    user.id,
+    req.ip
+);
         res.json({
             message: "Login successful",
             token,

@@ -2,8 +2,6 @@
 -- PostgreSQL database dump
 --
 
-\restrict QwUeA4pmCbuWrbf31rBtKwWcZrbHptbBtoJ76Vk3QdI2ZbCo6cmhsUTfObgoM0X
-
 -- Dumped from database version 17.10
 -- Dumped by pg_dump version 17.10
 
@@ -785,6 +783,3 @@ ALTER TABLE ONLY public.email_templates
 --
 -- PostgreSQL database dump complete
 --
-
-\unrestrict QwUeA4pmCbuWrbf31rBtKwWcZrbHptbBtoJ76Vk3QdI2ZbCo6cmhsUTfObgoM0X
-

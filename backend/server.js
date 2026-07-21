@@ -5,6 +5,7 @@ const { findUserByEmail } = require("./models/userModel");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../public")));
 app.use("/api/auth", authRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 const pool = require("./config/db");
 
