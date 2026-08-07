@@ -290,6 +290,102 @@
     .mosaic{ width:260px; height:260px; right:-20px; bottom:-20px; }
     .form-side{ padding:32px 24px; }
   }
+
+  /* Forgot Password Modal */
+
+.modal{
+    display:none;
+    position:fixed;
+    z-index:999;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.6);
+
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+
+    background:white;
+    color:black;
+
+    width:420px;
+
+    border-radius:12px;
+
+    padding:30px;
+
+    position:relative;
+
+    animation:popup .25s ease;
+}
+
+@keyframes popup{
+
+    from{
+        transform:scale(.8);
+        opacity:0;
+    }
+
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+
+}
+
+.close{
+
+    position:absolute;
+    right:18px;
+    top:12px;
+
+    font-size:26px;
+
+    cursor:pointer;
+}
+
+#forgotEmail{
+
+    width:100%;
+
+    padding:12px;
+
+    margin:20px 0;
+
+    border-radius:6px;
+
+    border:1px solid #ccc;
+}
+
+#sendResetBtn{
+
+    width:100%;
+
+    background:#E4102C;
+
+    color:white;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+}
+
+#forgotMessage{
+
+    margin-top:15px;
+
+    text-align:center;
+
+    font-weight:bold;
+}
 </style>
 </head>
 <body>
@@ -336,7 +432,7 @@
           <input type="checkbox">
           Se souvenir de moi
         </label>
-        <a href="#">Mot de passe oublié ?</a>
+       <a href="#" id="forgotPasswordLink">Mot de passe oublié ?</a>
       </div>
 
       <p id="login-error" style="color:#FF5A36; font-size:13px; margin:-14px 0 18px; display:none;"></p>
@@ -355,7 +451,32 @@
   </div>
 
 </div>
+<div id="forgotModal" class="modal">
 
+    <div class="modal-content">
+
+        <span class="close">&times;</span>
+
+        <h2>Password Recovery</h2>
+
+        <p>
+            Enter your email address to send a password reset request.
+        </p>
+
+        <input
+            type="email"
+            id="forgotEmail"
+            placeholder="Enter your email">
+
+        <button id="sendResetBtn">
+            Send Request
+        </button>
+
+        <p id="forgotMessage"></p>
+
+    </div>
+
+</div>
 <script>
   const mosaic = document.getElementById('mosaic');
   const cols = 12, rows = 12;
@@ -431,6 +552,85 @@
   passInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') handleLogin();
   });
+
+  // Forgot Password Modal
+
+const modal = document.getElementById("forgotModal");
+
+const forgotLink = document.getElementById("forgotPasswordLink");
+
+const closeBtn = document.querySelector(".close");
+
+forgotLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    modal.style.display = "flex";
+});
+
+closeBtn.addEventListener("click", function () {
+    modal.style.display = "none";
+});
+
+window.addEventListener("click", function (e) {
+    if (e.target === modal) {
+        modal.style.display = "none";
+    }
+});
+
+
+
+// Send password reset request
+
+document.getElementById("sendResetBtn").addEventListener("click", async () => {
+
+    const email = document.getElementById("forgotEmail").value.trim();
+    const message = document.getElementById("forgotMessage");
+
+    message.style.color = "red";
+    message.textContent = "";
+
+    if (!email) {
+        message.textContent = "Please enter your email.";
+        return;
+    }
+
+    try {
+
+        const response = await fetch("http://localhost:5000/api/auth/forgot-password", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({ email })
+
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+            message.style.color = "green";
+            message.textContent = data.message;
+
+            document.getElementById("forgotEmail").value = "";
+
+        } else {
+
+            message.style.color = "red";
+            message.textContent = data.message;
+
+        }
+
+    } catch (error) {
+
+        message.style.color = "red";
+        message.textContent = "Unable to connect to the server.";
+
+    }
+
+});
 </script>
 
 </body>

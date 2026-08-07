@@ -3,110 +3,119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Djezzy Admin Dashboard</title>
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
-
-body{
-    background:#101014;
-    color:white;
-}
-
-header{
-    background:#E4102C;
-    padding:20px 40px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-button{
-    background:white;
-    color:#E4102C;
-    border:none;
-    padding:10px 20px;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-main{
-    padding:40px;
-}
-
-.card{
-    background:#17151A;
-    padding:30px;
-    border-radius:10px;
-    margin-top:20px;
-}
-</style>
-
+<title>Djezzy | Tableau de bord</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/dashboard.css">
 </head>
-
 <body>
 
-<header>
+<div class="shell">
 
-<h2>Djezzy Admin</h2>
+  
+  <aside class="sidebar">
+    <div class="brand-mark">
+      <div class="glyph"></div>
+      <div>
+        <span class="brand-name">djezzy</span>
+        <span class="brand-tag">Espace Admin</span>
+      </div>
+    </div>
 
-<button id="logoutBtn">
-Déconnexion
-</button>
+    <nav>
+      <span class="nav-label">Général</span>
+      <ul>
+        <li class="active" data-view="dashboard"><i class="fa-solid fa-house"></i>Tableau de bord</li>
+        <li id="campaignsLink">
+    <i class="fa-solid fa-bullhorn"></i> Campagnes
+</li>
+        <li data-view="surveys"><i class="fa-solid fa-file-lines"></i>Sondages</li>
+        <li data-view="recipients"><i class="fa-solid fa-users"></i>Destinataires</li>
+      </ul>
+      <span class="nav-label">Suivi</span>
+      <ul>
+        <li data-view="analytics"><i class="fa-solid fa-chart-column"></i>Analytique</li>
+        <li data-view="password-requests"><i class="fa-solid fa-key"></i>Demandes de mot de passe</li>
+        <li data-view="settings"><i class="fa-solid fa-gear"></i>Paramètres</li>
+      </ul>
+    </nav>
 
-</header>
+    <button class="logout-btn" id="logoutBtn">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      Se déconnecter
+    </button>
+  </aside>
 
-<main>
+ 
+  <main>
+    <header>
+      <div>
+        <h1 id="welcome">Bienvenue</h1>
+        <p id="date"></p>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn" aria-label="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="notification-count" id="notificationCount">0</span>
+        </button>
+        <div class="profile">
+          <i class="fa-solid fa-circle-user"></i>
+          <div>
+            <span id="adminName">—</span>
+            <span class="role-tag" id="adminRole">—</span>
+          </div>
+        </div>
+      </div>
+    </header>
 
-<h1>Bienvenue 👋</h1>
+    <section class="cards">
+      <div class="card">
+        <div class="card-top">
+          <i class="fa-solid fa-bullhorn"></i>
+          <div class="signal" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        </div>
+        <h3>Campagnes actives</h3>
+        <h2 id="campaignCount">—</h2>
+      </div>
 
-<div class="card">
+      <div class="card">
+        <div class="card-top">
+          <i class="fa-solid fa-users"></i>
+          <div class="signal" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        </div>
+        <h3>Destinataires</h3>
+        <h2 id="recipientCount">—</h2>
+      </div>
 
-<h3 id="name"></h3>
+      <div class="card">
+        <div class="card-top">
+          <i class="fa-solid fa-file-lines"></i>
+          <div class="signal" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        </div>
+        <h3>Sondages</h3>
+        <h2 id="surveyCount">—</h2>
+      </div>
 
-<p id="email"></p>
+      <div class="card">
+        <div class="card-top">
+          <i class="fa-solid fa-chart-line"></i>
+          <div class="signal" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        </div>
+        <h3>Réponses</h3>
+        <h2 id="responseCount">—</h2>
+      </div>
+    </section>
 
-<p id="role"></p>
-
+    <section class="panel" id="statusPanel">
+      <div class="panel-head">
+        <h3>État de la session</h3>
+      </div>
+      <p id="statusMessage" class="status-message">Connexion au serveur…</p>
+    </section>
+  </main>
 </div>
 
-</main>
-
-<script>
-
-const token = localStorage.getItem("token");
-
-if(!token){
-    window.location.href="djezzy_login.html";
-}
-
-const user = JSON.parse(localStorage.getItem("user"));
-
-document.getElementById("name").textContent =
-user.first_name + " " + user.last_name;
-
-document.getElementById("email").textContent =
-user.email;
-
-document.getElementById("role").textContent =
-"Role : " + user.role;
-
-document.getElementById("logoutBtn").addEventListener("click",()=>{
-
-localStorage.removeItem("token");
-localStorage.removeItem("user");
-
-window.location.href="djezzy_login.html";
-
-});
-
-</script>
-
+<script src="js/dashboard.js"></script>
 </body>
 </html>
