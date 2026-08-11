@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Djezzy | Campaign Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          sans: ['Inter', 'sans-serif'],
+        },
+        colors: {
+          ink: '#101014',
+          panel: '#17151A',
+          djred: '#E4102C',
+          djreddeep: '#9C0A1E',
+          ember: '#FF5A36',
+        },
+        borderRadius: { '2xl': '18px', '3xl': '20px' },
+      }
+    }
+  }
+</script>
+<style>
+
+
+:root{
+  --ink:#101014;
+  --panel:#17151A;
+  --red:#E4102C;
+  --red-deep:#9C0A1E;
+  --ember:#FF5A36;
+  --cream:#F6F2EA;
+  --cream-dim:#C9C4B8;
+  --line:rgba(246,242,234,0.10);
+
+  --ws-bg:#F5F6F8;
+  --ws-surface:#FFFFFF;
+  --ws-border:#E7E8EC;
+  --ws-text:#14151A;
+  --ws-text-dim:#6B7280;
+  --ws-green:#16A34A; --ws-green-bg:#DCFCE7;
+  --ws-amber:#B45309; --ws-amber-bg:#FEF3C7;
+  --ws-gray:#4B5563;  --ws-gray-bg:#F1F2F4;
+  --ws-slate:#334155; --ws-slate-bg:#E2E8F0;
+  --ws-blue:#1D4ED8;  --ws-blue-bg:#DBEAFE;
+}
+
+*{ box-sizing:border-box; }
+h1,h2,h3,h4{ font-family:'Space Grotesk',sans-serif; }
+
+.shell{ display:flex; min-height:100vh; }
+
+
+.sidebar{
+  width:264px; flex-shrink:0;
+  background:var(--panel);
+  border-right:1px solid var(--line);
+  display:flex; flex-direction:column;
+  padding:32px 22px;
+  color:var(--cream);
+}
+.brand-mark{ display:flex; align-items:center; gap:12px; margin-bottom:44px; padding:0 6px; }
+.brand-mark .glyph{ width:30px; height:30px; flex-shrink:0; background:var(--red); clip-path:polygon(20% 10%, 20% 90%, 85% 50%); }
+.brand-name{ display:block; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:19px; color:var(--cream); }
+.brand-tag{ display:block; font-size:11px; color:var(--cream-dim); }
+nav{ flex:1; }
+.nav-label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:rgba(246,242,234,0.35); margin:22px 10px 10px; }
+.sidebar ul{ list-style:none; }
+.sidebar li{ display:flex; align-items:center; gap:13px; padding:11px 12px; margin-bottom:2px; border-radius:9px; font-size:14px; color:var(--cream-dim); cursor:pointer; transition:background .15s ease,color .15s ease; }
+.sidebar li i{ width:16px; text-align:center; font-size:14px; }
+.sidebar li:hover{ background:rgba(246,242,234,0.05); color:var(--cream); }
+.sidebar li.active{ background:var(--red); color:var(--cream); }
+.logout-btn{ display:flex; align-items:center; gap:10px; background:transparent; border:1px solid var(--line); color:var(--cream-dim); font-family:'Inter',sans-serif; font-size:13.5px; padding:12px 14px; border-radius:9px; cursor:pointer; transition:border-color .15s ease,color .15s ease; }
+.logout-btn:hover{ border-color:var(--red); color:var(--cream); }
+
+
+main{ flex:1; padding:36px 40px 60px; min-width:0; background:var(--ws-bg); }
+
+.topbar{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px; flex-wrap:wrap; gap:18px; }
+.topbar h1{ font-weight:600; font-size:28px; letter-spacing:-0.3px; color:var(--ws-text); }
+.topbar p{ margin-top:6px; color:var(--ws-text-dim); font-size:13.5px; }
+.header-right{ display:flex; align-items:center; gap:14px; }
+
+.icon-btn{ position:relative; width:42px; height:42px; border-radius:50%; border:1px solid var(--ws-border); background:var(--ws-surface); color:var(--ws-text-dim); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .15s ease,color .15s ease; }
+.icon-btn:hover{ border-color:var(--red); color:var(--red); }
+.icon-btn .dot{ position:absolute; top:9px; right:10px; width:7px; height:7px; border-radius:50%; background:var(--ember); animation:pulseDot 2.2s ease-in-out infinite; }
+@keyframes pulseDot{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,90,54,.5);} 50%{ box-shadow:0 0 0 5px rgba(255,90,54,0);} }
+
+.profile{ display:flex; align-items:center; gap:10px; background:var(--ws-surface); border:1px solid var(--ws-border); padding:8px 16px 8px 10px; border-radius:30px; }
+.profile i{ font-size:26px; color:var(--red); }
+.profile div{ display:flex; flex-direction:column; line-height:1.25; }
+.profile span:first-child{ font-size:13.5px; font-weight:500; color:var(--ws-text); }
+.role-tag{ font-size:10.5px; letter-spacing:0.6px; text-transform:uppercase; color:var(--ws-text-dim); }
+
+.btn-new-campaign{
+  display:flex; align-items:center; gap:9px;
+  background:var(--red); color:#fff; border:none;
+  font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px;
+  padding:13px 22px; border-radius:12px; cursor:pointer;
+  box-shadow:0 8px 20px rgba(228,16,44,0.28);
+  transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.btn-new-campaign:hover{ background:var(--red-deep); transform:translateY(-2px); box-shadow:0 10px 24px rgba(228,16,44,0.35); }
+.btn-new-campaign:active{ transform:translateY(0); }
+
+
+.stat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; margin-bottom:26px; }
+.stat-card{
+  background:var(--ws-surface); border:1px solid var(--ws-border); border-radius:18px;
+  padding:22px 22px 20px; transition:transform .2s ease, box-shadow .2s ease;
+  animation:fadeUp .4s ease both;
+}
+.stat-card:hover{ transform:translateY(-5px); box-shadow:0 16px 32px rgba(20,21,26,0.08); }
+.stat-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.stat-icon{ width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:17px; }
+.stat-icon--red{ background:#FDE4E8; color:var(--red); }
+.stat-icon--gray{ background:var(--ws-gray-bg); color:var(--ws-gray); }
+.stat-icon--amber{ background:var(--ws-amber-bg); color:var(--ws-amber); }
+.stat-icon--green{ background:var(--ws-green-bg); color:var(--ws-green); }
+.trend{ font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px; padding:4px 9px; border-radius:20px; }
+.trend--up{ color:var(--ws-green); background:var(--ws-green-bg); }
+.trend--flat{ color:var(--ws-text-dim); background:var(--ws-gray-bg); }
+.stat-value{ font-size:32px; font-weight:700; color:var(--ws-text); }
+.stat-label{ font-size:13px; color:var(--ws-text-dim); margin-top:4px; }
+
+
+.toolbar{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  flex-wrap:wrap; margin-bottom:20px;
+  background:var(--ws-surface); border:1px solid var(--ws-border); border-radius:16px;
+  padding:14px 16px;
+}
+.search-box{ display:flex; align-items:center; gap:10px; flex:1; min-width:220px; background:var(--ws-bg); border:1px solid var(--ws-border); border-radius:10px; padding:10px 14px; }
+.search-box i{ color:var(--ws-text-dim); font-size:13px; }
+.search-box input{ border:none; outline:none; background:transparent; font-size:13.5px; width:100%; color:var(--ws-text); font-family:'Inter',sans-serif; }
+
+.toolbar-controls{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.control-select{
+  border:1px solid var(--ws-border); background:var(--ws-bg); border-radius:10px;
+  padding:9px 12px; font-size:13px; color:var(--ws-text); font-family:'Inter',sans-serif; outline:none;
+  transition:border-color .15s ease;
+}
+.control-select:focus{ border-color:var(--red); }
+.control-date{ width:145px; }
+
+.btn-filter, .btn-reset{
+  border:none; border-radius:10px; padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer;
+  display:flex; align-items:center; gap:7px; transition:transform .12s ease, opacity .15s ease;
+}
+.btn-filter{ background:var(--ink); color:#fff; }
+.btn-filter:hover{ transform:translateY(-1px); }
+.btn-reset{ background:transparent; color:var(--ws-text-dim); border:1px solid var(--ws-border); }
+.btn-reset:hover{ color:var(--ws-text); border-color:var(--ws-text-dim); }
+
+
+.table-card{ background:var(--ws-surface); border:1px solid var(--ws-border); border-radius:18px; overflow:hidden; }
+.table-scroll{ overflow-x:auto; max-height:560px; }
+table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:920px; }
+thead th{
+  position:sticky; top:0; z-index:2;
+  background:var(--ws-surface); text-align:left; font-size:11.5px; text-transform:uppercase;
+  letter-spacing:0.5px; color:var(--ws-text-dim); font-weight:600;
+  padding:14px 18px; border-bottom:1px solid var(--ws-border);
+}
+tbody tr{ border-bottom:1px solid var(--ws-border); animation:fadeIn .35s ease both; transition:background .15s ease; }
+tbody tr:hover{ background:#FAFAFB; }
+tbody tr:last-child{ border-bottom:none; }
+td{ padding:15px 18px; color:var(--ws-text); vertical-align:middle; }
+.campaign-name{ font-weight:600; }
+.campaign-name-sub{ display:block; font-size:12px; color:var(--ws-text-dim); font-weight:400; margin-top:2px; }
+.text-right{ text-align:right; }
+
+.pill{ display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; padding:5px 12px; border-radius:20px; text-transform:capitalize; }
+.pill::before{ content:""; width:6px; height:6px; border-radius:50%; }
+.pill--draft{ background:var(--ws-gray-bg); color:var(--ws-gray); }
+.pill--draft::before{ background:var(--ws-gray); }
+.pill--scheduled{ background:var(--ws-amber-bg); color:var(--ws-amber); }
+.pill--scheduled::before{ background:var(--ws-amber); }
+.pill--active{ background:var(--ws-green-bg); color:var(--ws-green); }
+.pill--active::before{ background:var(--ws-green); }
+.pill--completed{ background:var(--ws-blue-bg); color:var(--ws-blue); }
+.pill--completed::before{ background:var(--ws-blue); }
+.pill--archived{ background:var(--ws-slate-bg); color:var(--ws-slate); }
+.pill--archived::before{ background:var(--ws-slate); }
+
+.row-actions{ display:flex; gap:6px; justify-content:flex-end; }
+.row-actions button{
+  width:32px; height:32px; border-radius:9px; border:1px solid var(--ws-border); background:var(--ws-surface);
+  color:var(--ws-text-dim); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12.5px;
+  transition:all .15s ease;
+}
+.row-actions button:hover{ color:#fff; background:var(--ink); border-color:var(--ink); transform:translateY(-1px); }
+.row-actions button.danger:hover{ background:var(--red); border-color:var(--red); }
+
+.pagination{ display:flex; align-items:center; justify-content:center; gap:6px; padding:16px; border-top:1px solid var(--ws-border); }
+.pagination button{
+  min-width:32px; height:32px; padding:0 10px; border-radius:8px; border:1px solid var(--ws-border);
+  background:var(--ws-surface); color:var(--ws-text-dim); font-size:13px; cursor:pointer; transition:all .15s ease;
+}
+.pagination button:hover{ border-color:var(--ws-text-dim); color:var(--ws-text); }
+.pagination button.active{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+
+.empty-state{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:70px 20px; text-align:center; }
+.empty-illustration{
+  width:84px; height:84px; border-radius:24px; background:#FDE4E8; color:var(--red);
+  display:flex; align-items:center; justify-content:center; font-size:32px; margin-bottom:22px;
+}
+.empty-state p{ font-size:14.5px; color:var(--ws-text-dim); margin-bottom:20px; }
+
+
+.overlay{
+  position:fixed; inset:0; background:rgba(16,16,20,0.5); backdrop-filter:blur(2px);
+  opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:40;
+}
+.overlay.show{ opacity:1; pointer-events:auto; }
+
+
+.drawer{
+  position:fixed; top:0; right:0; height:100vh; width:420px; max-width:92vw;
+  background:var(--ws-surface); z-index:50; box-shadow:-20px 0 50px rgba(0,0,0,0.15);
+  transform:translateX(100%); transition:transform .32s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column;
+}
+.drawer.open{ transform:translateX(0); }
+.drawer-head{ display:flex; align-items:flex-start; justify-content:space-between; padding:26px 26px 18px; border-bottom:1px solid var(--ws-border); }
+.drawer-eyebrow{ font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--ws-text-dim); }
+.drawer-head h2{ font-size:20px; font-weight:600; margin-top:4px; }
+.drawer-close{ width:34px; height:34px; border-radius:50%; border:1px solid var(--ws-border); background:transparent; color:var(--ws-text-dim); cursor:pointer; transition:all .15s ease; }
+.drawer-close:hover{ background:var(--ink); color:#fff; border-color:var(--ink); }
+.drawer-body{ padding:22px 26px 40px; overflow-y:auto; flex:1; }
+.drawer-status-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.drawer-date{ font-size:12px; color:var(--ws-text-dim); }
+.drawer-section{ margin-bottom:24px; }
+.drawer-section h4{ font-size:12.5px; text-transform:uppercase; letter-spacing:0.5px; color:var(--ws-text-dim); margin-bottom:10px; font-weight:600; }
+.drawer-desc{ font-size:13.5px; line-height:1.6; color:var(--ws-text); }
+.drawer-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; background:var(--ws-bg); border-radius:14px; padding:16px; margin-bottom:24px; }
+.drawer-stats > div{ display:flex; flex-direction:column; gap:4px; }
+.d-num{ font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700; }
+.d-lbl{ font-size:11px; color:var(--ws-text-dim); }
+.drawer-chip{ display:inline-flex; align-items:center; gap:8px; background:var(--ws-bg); border:1px solid var(--ws-border); padding:9px 14px; border-radius:10px; font-size:13px; }
+.drawer-grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.drawer-grid-2 p{ font-size:13.5px; font-weight:500; margin-top:4px; }
+
+.email-preview{ border:1px solid var(--ws-border); border-radius:14px; overflow:hidden; }
+.email-preview-head{ background:var(--ink); color:#fff; padding:12px 16px; font-size:13px; font-weight:600; }
+.email-preview-body{ padding:16px; font-size:13px; color:var(--ws-text-dim); line-height:1.6; background:var(--ws-bg); }
+
+
+.modal{
+  position:fixed; top:50%; left:50%; width:640px; max-width:92vw; max-height:88vh;
+  background:var(--ws-surface); border-radius:20px; z-index:55; overflow:hidden;
+  display:flex; flex-direction:column;
+  transform:translate(-50%,-50%) scale(0.94); opacity:0; pointer-events:none;
+  transition:transform .25s cubic-bezier(.4,0,.2,1), opacity .2s ease;
+  box-shadow:0 30px 80px rgba(0,0,0,0.25);
+}
+.modal.open{ transform:translate(-50%,-50%) scale(1); opacity:1; pointer-events:auto; }
+.modal-head{ display:flex; align-items:center; justify-content:space-between; padding:22px 26px; border-bottom:1px solid var(--ws-border); }
+.modal-head h2{ font-size:19px; font-weight:600; }
+.modal-body{ padding:24px 26px; overflow-y:auto; }
+.form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.form-field{ display:flex; flex-direction:column; gap:7px; }
+.form-field.span-2{ grid-column:span 2; }
+.form-field label{ font-size:12.5px; font-weight:600; color:var(--ws-text-dim); }
+.form-field input, .form-field select, .form-field textarea{
+  border:1px solid var(--ws-border); border-radius:10px; padding:11px 13px; font-size:13.5px;
+  font-family:'Inter',sans-serif; outline:none; color:var(--ws-text); background:var(--ws-bg);
+  transition:border-color .15s ease, background .15s ease;
+}
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus{ border-color:var(--red); background:#fff; }
+.form-field textarea{ resize:vertical; }
+
+.modal-foot{ display:flex; justify-content:flex-end; gap:10px; padding:18px 26px; border-top:1px solid var(--ws-border); }
+.btn-ghost{ background:transparent; border:1px solid var(--ws-border); color:var(--ws-text-dim); border-radius:10px; padding:11px 18px; font-size:13.5px; font-weight:600; cursor:pointer; transition:all .15s ease; }
+.btn-ghost:hover{ color:var(--ws-text); border-color:var(--ws-text-dim); }
+.btn-secondary{ background:var(--ink); color:#fff; border:none; border-radius:10px; padding:11px 18px; font-size:13.5px; font-weight:600; cursor:pointer; transition:transform .12s ease; }
+.btn-secondary:hover{ transform:translateY(-1px); }
+
+
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+@keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+
+@media (max-width:1080px){
+  .drawer-stats{ grid-template-columns:1fr 1fr; }
+}
+
+@media (max-width:900px){
+  .shell{ flex-direction:column; }
+  .sidebar{ width:100%; flex-direction:row; align-items:center; padding:16px 20px; overflow-x:auto; }
+  .brand-mark{ margin-bottom:0; margin-right:20px; }
+  nav{ display:none; }
+  .logout-btn{ margin-left:auto; white-space:nowrap; }
+  main{ padding:24px 18px 50px; }
+  .form-grid{ grid-template-columns:1fr; }
+  .form-field.span-2{ grid-column:span 1; }
+}
+
+@media (max-width:760px){
+
+  table, thead, tbody, th, td, tr{ display:block; }
+  thead{ display:none; }
+  .table-scroll{ max-height:none; }
+  tbody tr{
+    border:1px solid var(--ws-border); border-radius:14px; margin:12px; padding:6px 4px;
+  }
+  td{ display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid var(--ws-border); gap:10px; }
+  td:last-child{ border-bottom:none; }
+  td::before{ content:attr(data-label); font-size:11px; font-weight:600; color:var(--ws-text-dim); text-transform:uppercase; letter-spacing:0.4px; }
+  .row-actions{ justify-content:flex-start; }
+}
+
+</style>
+</head>
+<body class="font-sans bg-[#F5F6F8] text-[#14151A]">
+
+<div class="shell">
+
+  
+  <aside class="sidebar">
+    <div class="brand-mark">
+      <div class="glyph"></div>
+      <div>
+        <span class="brand-name">djezzy</span>
+        <span class="brand-tag">Espace Admin</span>
+      </div>
+    </div>
+
+    <nav>
+      <span class="nav-label">Général</span>
+      <ul>
+        <li data-view="dashboard"><i class="fa-solid fa-house"></i>Tableau de bord</li>
+        <li class="active" data-view="campaigns"><i class="fa-solid fa-bullhorn"></i>Campagnes</li>
+        <li data-view="surveys"><i class="fa-solid fa-file-lines"></i>Sondages</li>
+        <li data-view="recipients"><i class="fa-solid fa-users"></i>Destinataires</li>
+      </ul>
+      <span class="nav-label">Suivi</span>
+      <ul>
+        <li data-view="analytics"><i class="fa-solid fa-chart-column"></i>Analytique</li>
+        <li data-view="password-requests"><i class="fa-solid fa-key"></i>Demandes de mot de passe</li>
+        <li data-view="settings"><i class="fa-solid fa-gear"></i>Paramètres</li>
+      </ul>
+    </nav>
+
+    <button class="logout-btn" id="logoutBtn">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      Se déconnecter
+    </button>
+  </aside>
+
+
+  <main>
+    
+    <header class="topbar">
+      <div>
+        <h1 id="pageTitle">Campaign Management</h1>
+        <p id="pageSubtitle">Create, manage and monitor email campaigns.</p>
+      </div>
+      <div class="header-right relative">
+        <button class="icon-btn" aria-label="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="dot"></span>
+        </button>
+        <div id="notificationDropdown" class="hidden absolute right-0 top-14 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50">
+
+    <div class="p-4 border-b">
+        <h3 class="font-semibold text-lg">
+            Notifications
+        </h3>
+    </div>
+
+    <div id="notificationList" class="max-h-96 overflow-y-auto">
+
+    </div>
+
+    <div class="p-3 border-t text-center">
+
+        <button
+            id="clearNotifications"
+            class="text-red-600 font-semibold hover:underline">
+
+            Clear all
+
+        </button>
+
+    </div>
+
+</div>
+        <div class="profile">
+          <i class="fa-solid fa-circle-user"></i>
+          <div>
+            <span id="adminName">—</span>
+            <span class="role-tag" id="adminRole">—</span>
+          </div>
+        </div>
+        <button class="btn-new-campaign" id="openCreateModal">
+          <i class="fa-solid fa-plus"></i>
+          New Campaign
+        </button>
+      </div>
+    </header>
+
+    <section class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-top">
+          <span class="stat-icon stat-icon--red"><i class="fa-solid fa-bullhorn"></i></span>
+          <span class="trend trend--up"><i class="fa-solid fa-arrow-trend-up"></i> 12%</span>
+        </div>
+        <h2 class="stat-value" data-count="24">0</h2>
+        <p class="stat-label">Total Campaigns</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span class="stat-icon stat-icon--gray"><i class="fa-solid fa-pen"></i></span>
+          <span class="trend trend--flat"><i class="fa-solid fa-minus"></i> 0%</span>
+        </div>
+        <h2 class="stat-value" data-count="6">0</h2>
+        <p class="stat-label">Draft</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span class="stat-icon stat-icon--amber"><i class="fa-solid fa-clock"></i></span>
+          <span class="trend trend--up"><i class="fa-solid fa-arrow-trend-up"></i> 4%</span>
+        </div>
+        <h2 class="stat-value" data-count="5">0</h2>
+        <p class="stat-label">Scheduled</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span class="stat-icon stat-icon--green"><i class="fa-solid fa-circle-check"></i></span>
+          <span class="trend trend--up"><i class="fa-solid fa-arrow-trend-up"></i> 18%</span>
+        </div>
+        <h2 class="stat-value" data-count="11">0</h2>
+        <p class="stat-label">Completed</p>
+      </div>
+    </section>
+
+    
+    <section class="toolbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search campaigns by name or subject…">
+      </div>
+
+      <div class="toolbar-controls">
+        <select id="statusFilter" class="control-select">
+          <option value="all">All statuses</option>
+          <option value="draft">Draft</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+          <option value="archived">Archived</option>
+        </select>
+
+        <input type="date" id="dateFrom" class="control-select control-date" aria-label="From date">
+        <input type="date" id="dateTo" class="control-select control-date" aria-label="To date">
+
+        <select id="sortSelect" class="control-select">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="recipients-desc">Most recipients</option>
+          <option value="az">A → Z</option>
+        </select>
+
+        <button id="applyFilters" class="btn-filter"><i class="fa-solid fa-filter"></i> Filter</button>
+        <button id="resetFilters" class="btn-reset">Reset</button>
+      </div>
+    </section>
+
+    
+    <section class="table-card">
+      <div class="table-scroll">
+        <table id="campaignsTable">
+          <thead>
+            <tr>
+              <th>Campaign</th>
+              <th>Email Subject</th>
+              <th>Status</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Recipients</th>
+              <th>Created By</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="campaignsBody">
+           
+          </tbody>
+        </table>
+      </div>
+
+      
+      <div id="emptyState" class="empty-state" hidden>
+        <div class="empty-illustration">
+          <i class="fa-solid fa-envelope-open-text"></i>
+        </div>
+        <p>No campaigns have been created yet.</p>
+        <button class="btn-new-campaign" id="emptyCreateBtn">
+          <i class="fa-solid fa-plus"></i>
+          Create your first campaign
+        </button>
+      </div>
+
+      <div class="pagination" id="pagination"></div>
+    </section>
+  </main>
+</div>
+
+
+<div class="overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="viewDrawer">
+  <div class="drawer-head">
+    <div>
+      <span class="drawer-eyebrow">Campaign</span>
+      <h2 id="drawerTitle">—</h2>
+    </div>
+    <button class="drawer-close" id="closeDrawer" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="drawer-body">
+    <div class="drawer-status-row">
+      <span id="drawerStatusPill" class="pill">—</span>
+      <span class="drawer-date" id="drawerCreated">—</span>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Overview</h4>
+      <p id="drawerDescription" class="drawer-desc">—</p>
+    </div>
+
+    <div class="drawer-stats">
+      <div>
+        <span class="d-num" id="drawerRecipients">0</span>
+        <span class="d-lbl">Recipients</span>
+      </div>
+      <div>
+        <span class="d-num" id="drawerOpenRate">0%</span>
+        <span class="d-lbl">Open rate</span>
+      </div>
+      <div>
+        <span class="d-num" id="drawerResponses">0</span>
+        <span class="d-lbl">Survey responses</span>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Survey attached</h4>
+      <div class="drawer-chip"><i class="fa-solid fa-file-lines"></i> <span id="drawerSurvey">—</span></div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Email preview</h4>
+      <div class="email-preview">
+        <div class="email-preview-head">
+          <span id="drawerSubject">—</span>
+        </div>
+        <div class="email-preview-body" id="drawerEmailBody">—</div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Schedule</h4>
+      <div class="drawer-grid-2">
+        <div><span class="d-lbl">Start date</span><p id="drawerStart">—</p></div>
+        <div><span class="d-lbl">End date</span><p id="drawerEnd">—</p></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+
+<div class="overlay" id="modalOverlay"></div>
+<div class="modal" id="createModal">
+  <div class="modal-head">
+    <h2>New Campaign</h2>
+    <button class="drawer-close" id="closeModal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-field span-2">
+        <label>Campaign title</label>
+        <input type="text" id="f-title" placeholder="e.g. Ramadan Data Bonus Offer">
+      </div>
+
+      <div class="form-field span-2">
+        <label>Description</label>
+        <textarea id="f-description" rows="3" placeholder="What is this campaign about?"></textarea>
+      </div>
+
+      <div class="form-field span-2">
+        <label>Email subject</label>
+        <input type="text" id="f-subject" placeholder="e.g. Double your data this month 🎉">
+      </div>
+
+      <div class="form-field">
+        <label>Email template</label>
+        <select id="f-template">
+          <option>Promotional — Red Banner</option>
+          <option>Newsletter — Minimal</option>
+          <option>Survey Invitation</option>
+          <option>Plain Text</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label>Survey</label>
+        <select id="f-survey">
+    <option value="">No survey</option>
+</select>
+      </div>
+
+      <div class="form-field span-2">
+        <label>Recipients</label>
+        <select id="f-recipients">
+       <option value="all">All Customers</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label>Start date</label>
+        <input type="date" id="f-start">
+      </div>
+
+      <div class="form-field">
+        <label>End date</label>
+        <input type="date" id="f-end">
+      </div>
+
+      <div class="form-field">
+        <label>Status</label>
+        <select id="f-status">
+          <option value="draft">Draft</option>
+          <option value="scheduled">Scheduled</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-foot">
+    <button class="btn-ghost" id="cancelModal">Cancel</button>
+    <button class="btn-secondary" id="saveDraft">Save Draft</button>
+    <button class="btn-new-campaign" id="scheduleCampaign"  onclick="createCampaign('sent')" >Schedule Campaign</button>
+  </div>
+</div>
+
+<script>
+  let notifications = [
+
+    {
+        icon: "fa-circle-plus",
+        color: "text-green-600",
+        message: "Campaign created successfully.",
+        time: "Just now"
+    },
+
+    {
+        icon: "fa-pen",
+        color: "text-blue-600",
+        message: "Campaign edited.",
+        time: "5 min ago"
+    },
+
+    {
+        icon: "fa-trash",
+        color: "text-red-600",
+        message: "Campaign deleted.",
+        time: "12 min ago"
+    }
+
+];
+const API = "http://localhost:5000/api";
+
+const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user"));
+let allCampaigns = [];
+let campaigns = [];
+
+
+let editingCampaign = null;
+
+
+if (!token || !user) {
+    window.location.href = "djezzy_login.html";
+}
+
+
+
+document.getElementById("adminName").textContent =
+`${user.first_name} ${user.last_name}`;
+
+document.getElementById("adminRole").textContent =
+user.role;
+
+
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    window.location.href = "djezzy_login.html";
+
+});
+
+
+
+document.querySelector('[data-view="dashboard"]')
+.addEventListener("click", () => {
+
+    window.location.href = "dashboard.html";
+
+});
+
+
+
+async function loadCampaigns() {
+
+    try {
+
+        const response = await fetch(`${API}/campaigns`, {
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+
+        });
+
+        if (response.status === 401 || response.status === 403) {
+
+            localStorage.clear();
+            window.location.href = "djezzy_login.html";
+            return;
+
+        }
+
+       campaigns = await response.json();
+
+       allCampaigns = campaigns;
+
+       renderCampaigns(allCampaigns);
+      updateStats(allCampaigns);
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+        document.getElementById("campaignContainer").innerHTML = `
+            <h3 style="text-align:center;color:#777;margin-top:50px;">
+                Impossible de charger les campagnes.
+            </h3>
+        `;
+
+    }
+
+}
+
+loadCampaigns();
+
+
+document.getElementById("saveDraft").addEventListener("click", () => {
+    createCampaign("draft");
+});
+
+document.getElementById("scheduleCampaign").addEventListener("click", () => {
+    createCampaign("scheduled");
+});
+
+
+async function createCampaign(forceStatus = null) {
+
+    const campaign = {
+        title: document.getElementById("f-title").value.trim(),
+        description: document.getElementById("f-description").value.trim(),
+        email_subject: document.getElementById("f-subject").value.trim(),
+        email_template: document.getElementById("f-template").value,
+        start_date: document.getElementById("f-start").value,
+        end_date: document.getElementById("f-end").value,
+        status: forceStatus,
+        recipient_criteria:
+    document.getElementById("f-recipients").value,
+
+questionnaire_id:
+    document.getElementById("f-survey").value || null
+    };
+
+    if (!campaign.title) {
+        alert("Please enter a campaign title.");
+        return;
+    }
+
+    if (!campaign.email_subject) {
+        alert("Please enter an email subject.");
+        return;
+    }
+
+    if (!campaign.email_template) {
+        alert("Please enter an email template.");
+        return;
+    }
+
+    try {
+
+        if (editingCampaign) {
+
+            const response = await fetch(
+                `${API}/campaigns/${editingCampaign}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify(campaign)
+                }
+            );
+
+            if (!response.ok) {
+
+                const error = await response.json();
+
+                alert(
+                    error.message ||
+                    "Unable to update campaign."
+                );
+
+                return;
+            }
+
+            alert("Campaign updated successfully!");
+
+            editingCampaign = null;
+
+            closeModal();
+
+            loadCampaigns();
+
+            return;
+        }
+
+        const createResponse = await fetch(
+            `${API}/campaigns`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(campaign)
+            }
+        );
+
+        if (!createResponse.ok) {
+
+            const error = await createResponse.json();
+
+            alert(
+                error.message ||
+                "Unable to create campaign."
+            );
+
+            return;
+        }
+
+        const createdCampaign =
+            await createResponse.json();
+
+        if (forceStatus === "sent") {
+
+            const launchResponse = await fetch(
+                `${API}/campaigns/${createdCampaign.id}/launch`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            const launchResult =
+                await launchResponse.json();
+
+            if (!launchResponse.ok) {
+
+                alert(
+                    launchResult.message ||
+                    "Campaign was created but could not be sent."
+                );
+
+                return;
+            }
+
+            alert(
+                `Campaign sent successfully!\n\n` +
+                `Recipients: ${launchResult.total_recipients}\n` +
+                `Sent: ${launchResult.sent}\n` +
+                `Failed: ${launchResult.failed}`
+            );
+
+        } else {
+
+            alert("Campaign created successfully!");
+
+        }
+
+        editingCampaign = null;
+
+        closeModal();
+
+        loadCampaigns();
+
+    } catch (err) {
+
+        console.error("CAMPAIGN ERROR:", err);
+
+        alert(
+            "Server error. Check the backend console."
+        );
+
+    }
+}
+
+
+
+let campaignToDelete = null;
+
+function deleteCampaign(id) {
+
+    campaignToDelete = id;
+
+    document.getElementById("deleteOverlay").classList.add("show");
+    document.getElementById("deleteModal").classList.add("open");
+
+}
+
+async function confirmDeleteCampaign() {
+
+    try {
+
+        const response = await fetch(`${API}/campaigns/${campaignToDelete}`, {
+
+            method: "DELETE",
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+
+        });
+
+        if (!response.ok) {
+
+            const error = await response.json();
+
+            alert(error.message);
+
+            return;
+
+        }
+
+        closeDeleteModal();
+
+        loadCampaigns();
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+        alert("Server error");
+
+    }
+
+
+
+}
+
+function closeDeleteModal() {
+
+    campaignToDelete = null;
+
+    document.getElementById("deleteOverlay").classList.remove("show");
+    document.getElementById("deleteModal").classList.remove("open");
+
+}
+
+function renderCampaigns(campaigns) {
+
+    const tbody = document.getElementById("campaignsBody");
+    const emptyState = document.getElementById("emptyState");
+
+    tbody.innerHTML = "";
+
+    if (campaigns.length === 0) {
+        emptyState.hidden = false;
+        return;
+    }
+
+    emptyState.hidden = true;
+
+    campaigns.forEach(campaign => {
+
+        tbody.innerHTML += `
+        <tr>
+
+            <td>
+                <strong>${campaign.title}</strong><br>
+                <small>${campaign.description ?? ""}</small>
+            </td>
+
+            <td>${campaign.email_subject}</td>
+
+            <td>
+                <span class="pill pill--${campaign.status.toLowerCase()}">
+                    ${campaign.status}
+                </span>
+            </td>
+
+            <td>${campaign.start_date ?? "-"}</td>
+
+            <td>${campaign.end_date ?? "-"}</td>
+
+            <td>—</td>
+
+            <td>${campaign.created_by}</td>
+
+            <td class="text-right">
+
+                <div class="row-actions">
+
+                    <button onclick="viewCampaign(${campaign.id})">
+    <i class="fa fa-eye"></i>
+</button>
+
+                    <button onclick="editCampaign(${campaign.id})">
+    <i class="fa-solid fa-pen"></i>
+</button>
+
+   <button
+    class="danger"
+    onclick="deleteCampaign(${campaign.id})"
+>
+    <i class="fa-solid fa-trash"></i>
+</button>
+                </div>
+
+            </td>
+
+        </tr>
+        `;
+
+    });
+
+}
+
+
+function updateStats(campaigns) {
+
+    document.querySelectorAll(".stat-value")[0].textContent =
+        campaigns.length;
+
+    document.querySelectorAll(".stat-value")[1].textContent =
+        campaigns.filter(c =>
+            c.status.toLowerCase() === "draft"
+        ).length;
+
+    document.querySelectorAll(".stat-value")[2].textContent =
+        campaigns.filter(c =>
+            c.status.toLowerCase() === "scheduled"
+        ).length;
+
+    document.querySelectorAll(".stat-value")[3].textContent =
+        campaigns.filter(c =>
+            c.status.toLowerCase() === "active"
+        ).length;
+
+}
+
+
+const modalElement = document.getElementById("campaignModal");
+
+if (modalElement) {
+
+    const campaignModal = new bootstrap.Modal(modalElement);
+
+    document
+        .getElementById("newCampaignBtn")
+        ?.addEventListener("click", () => {
+
+            campaignModal.show();
+
+        });
+
+}
+
+
+
+
+const openBtn = document.getElementById("openCreateModal");
+const emptyBtn = document.getElementById("emptyCreateBtn");
+
+const closeBtn = document.getElementById("closeModal");
+const cancelBtn = document.getElementById("cancelModal");
+
+const modal = document.getElementById("createModal");
+const overlay = document.getElementById("modalOverlay");
+
+function openCreateCampaignModal() {
+
+    loadQuestionnaires();
+
+    modal.classList.add("open");
+    overlay.classList.add("show");
+
+}
+
+openBtn.addEventListener("click", openCreateCampaignModal);
+emptyBtn.addEventListener("click", openCreateCampaignModal);
+
+closeBtn.addEventListener("click", closeModal);
+cancelBtn.addEventListener("click", closeModal);
+overlay.addEventListener("click", closeModal);
+
+function closeModal() {
+
+    modal.classList.remove("open");
+    overlay.classList.remove("show");
+
+}
+function closeDeleteModal() {
+
+    campaignToDelete = null;
+
+    document.getElementById("deleteModal").classList.remove("open");
+    document.getElementById("deleteOverlay").classList.remove("show");
+
+}
+async function editCampaign(id) {
+
+    try {
+
+        const response = await fetch(`${API}/campaigns`, {
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+
+        });
+
+        const campaigns = await response.json();
+
+        const campaign = campaigns.find(c => c.id === id);
+
+        if (!campaign) return;
+
+        editingCampaign = id;
+
+        document.getElementById("f-title").value = campaign.title || "";
+
+        document.getElementById("f-description").value =
+            campaign.description || "";
+
+        document.getElementById("f-subject").value =
+            campaign.email_subject || "";
+
+        document.getElementById("f-template").value =
+            campaign.email_template || "";
+
+        document.getElementById("f-start").value =
+            campaign.start_date?.split("T")[0] || "";
+
+        document.getElementById("f-end").value =
+            campaign.end_date?.split("T")[0] || "";
+
+        document.getElementById("f-status").value =
+            campaign.status.toLowerCase();
+
+        document.querySelector(".modal-head h2").textContent =
+            "Edit Campaign";
+
+        document.getElementById("saveDraft").textContent =
+            "Update Campaign";
+
+        modal.classList.add("open");
+        overlay.classList.add("show");
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+    }
+
+
+
+}
+
+async function viewCampaign(id) {
+
+    try {
+
+        const response = await fetch(`${API}/campaigns`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const campaigns = await response.json();
+
+        const campaign = campaigns.find(c => c.id == id);
+
+        if (!campaign) return;
+
+        document.getElementById("drawerTitle").textContent = campaign.title;
+
+        document.getElementById("drawerDescription").textContent =
+            campaign.description || "No description.";
+
+        document.getElementById("drawerSubject").textContent =
+            campaign.email_subject || "-";
+
+        document.getElementById("drawerEmailBody").textContent =
+            campaign.email_template || "-";
+
+        document.getElementById("drawerStart").textContent =
+            campaign.start_date || "-";
+
+        document.getElementById("drawerEnd").textContent =
+            campaign.end_date || "-";
+
+        document.getElementById("drawerCreated").textContent =
+            campaign.created_at
+                ? new Date(campaign.created_at).toLocaleDateString()
+                : "-";
+
+        document.getElementById("drawerStatusPill").className =
+            `pill pill--${campaign.status.toLowerCase()}`;
+
+        document.getElementById("drawerStatusPill").textContent =
+            campaign.status;
+
+        document.getElementById("drawerOverlay").classList.add("show");
+        document.getElementById("viewDrawer").classList.add("open");
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
+
+}
+document.getElementById("closeDrawer").addEventListener("click", closeDrawer);
+
+document.getElementById("drawerOverlay").addEventListener("click", closeDrawer);
+
+function closeDrawer() {
+
+    document.getElementById("drawerOverlay").classList.remove("show");
+    document.getElementById("viewDrawer").classList.remove("open");
+
+}
+
+
+document.getElementById("searchInput").addEventListener("input", searchCampaigns);
+
+function searchCampaigns() {
+
+    const search = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const filtered = campaigns.filter(campaign => {
+
+        return (
+
+            campaign.title.toLowerCase().includes(search)
+
+            ||
+
+            campaign.email_subject.toLowerCase().includes(search)
+
+        );
+
+    });
+
+    renderCampaigns(filtered);
+
+}
+
+function applyFilters() {
+
+    let filtered = [...allCampaigns];
+
+    
+    const search = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    if (search) {
+
+        filtered = filtered.filter(c =>
+
+            c.title.toLowerCase().includes(search) ||
+
+            (c.email_subject || "")
+                .toLowerCase()
+                .includes(search)
+
+        );
+
+    }
+
+    
+    const status = document.getElementById("statusFilter").value;
+
+    if (status !== "all") {
+
+        filtered = filtered.filter(c =>
+
+            c.status.toLowerCase() === status
+
+        );
+
+    }
+
+
+    const from = document.getElementById("dateFrom").value;
+
+    if (from) {
+
+        filtered = filtered.filter(c =>
+
+            c.start_date &&
+            c.start_date >= from
+
+        );
+
+    }
+
+
+    const to = document.getElementById("dateTo").value;
+
+    if (to) {
+
+        filtered = filtered.filter(c =>
+
+            c.end_date &&
+            c.end_date <= to
+
+        );
+
+    }
+
+
+    const sort = document.getElementById("sortSelect").value;
+
+    switch (sort) {
+
+        case "az":
+
+            filtered.sort((a,b)=>
+
+                a.title.localeCompare(b.title)
+
+            );
+
+            break;
+
+        case "oldest":
+
+            filtered.reverse();
+
+            break;
+
+    }
+
+    renderCampaigns(filtered);
+
+}
+document
+.getElementById("applyFilters")
+.addEventListener("click", applyFilters);
+document
+.getElementById("resetFilters")
+.addEventListener("click", () => {
+
+    document.getElementById("searchInput").value = "";
+    document.getElementById("statusFilter").value = "all";
+    document.getElementById("dateFrom").value = "";
+    document.getElementById("dateTo").value = "";
+    document.getElementById("sortSelect").value = "newest";
+
+    renderCampaigns(allCampaigns);
+
+});
+async function loadNotifications() {
+
+    const response = await fetch(`${API}/notifications`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(await response.text());
+        return;
+    }
+
+    const notifications = await response.json();
+
+    renderNotifications(notifications);
+
+}
+const bell = document.querySelector(".icon-btn");
+const dropdown = document.getElementById("notificationDropdown");
+
+bell.addEventListener("click", async () => {
+
+    dropdown.classList.toggle("hidden");
+
+    await loadNotifications();
+
+});
+
+
+function renderNotifications(notifications) {
+
+    const list = document.getElementById("notificationList");
+
+    list.innerHTML = "";
+
+    notifications.forEach(notification => {
+
+        list.innerHTML += `
+
+        <div class="flex gap-4 p-4 border-b hover:bg-gray-50">
+
+            <i class="fa-solid fa-bell text-red-600 text-lg mt-1"></i>
+
+            <div>
+
+                <p class="text-sm font-semibold">
+                    ${notification.title}
+                </p>
+
+                <p class="text-sm text-gray-700">
+                    ${notification.message}
+                </p>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+    document
+.getElementById("clearNotifications")
+.addEventListener("click", () => {
+
+    document.getElementById("notificationList").innerHTML = "";
+
+});
+
+}
+
+async function loadQuestionnaires() {
+
+    try {
+
+        const response = await fetch(
+            `${API}/questionnaires`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to load questionnaires");
+        }
+
+        const questionnaires = await response.json();
+
+        const select =
+            document.getElementById("f-survey");
+
+        select.innerHTML =
+            `<option value="">No survey</option>`;
+
+        questionnaires.forEach(questionnaire => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = questionnaire.id;
+            option.textContent = questionnaire.title;
+
+            select.appendChild(option);
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "QUESTIONNAIRES ERROR:",
+            error
+        );
+
+    }
+}
+
+</script>
+
+<div class="overlay" id="deleteOverlay"></div>
+
+<div class="modal" id="deleteModal" style="width:420px;">
+
+    <div class="modal-head">
+        <h2>Delete Campaign</h2>
+    </div>
+
+    <div class="modal-body">
+
+        <div style="text-align:center;padding:20px 10px;">
+
+            <i class="fa-solid fa-triangle-exclamation"
+               style="
+                    font-size:55px;
+                    color:#E4102C;
+                    margin-bottom:18px;
+               ">
+            </i>
+
+            <p style="font-size:16px;font-weight:600;">
+                Are you sure?
+            </p>
+
+            <p style="color:#666;margin-top:10px;">
+                This campaign will be permanently deleted.
+                <br>
+                This action cannot be undone.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="modal-foot">
+
+       <button class="btn-ghost" onclick="closeDeleteModal()">
+    Cancel
+</button>
+
+<button
+    class="btn-new-campaign"
+    style="background:#E4102C;"
+    onclick="confirmDeleteCampaign()"
+>
+    <i class="fa-solid fa-trash"></i>
+    Delete
+</button>
+
+    </div>
+
+</div>
+</body>
+</html>
