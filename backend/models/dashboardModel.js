@@ -48,25 +48,183 @@ async function getRecentActivity() {
     return result.rows;
 }
 
-
 async function getResponsesLast7Days() {
+
     const query = `
         SELECT
-            DATE(completed_at) AS day,
+            DATE(survey_completed_at) AS day,
             COUNT(*) AS total
-        FROM responses
-        WHERE completed_at >= CURRENT_DATE - INTERVAL '6 days'
-        GROUP BY DATE(completed_at)
+        FROM campaign_recipients
+        WHERE survey_completed_at IS NOT NULL
+          AND survey_completed_at >= CURRENT_DATE - INTERVAL '6 days'
+        GROUP BY DATE(survey_completed_at)
         ORDER BY day;
     `;
 
     const result = await pool.query(query);
+
     return result.rows;
 }
 
+async function getTodayStats() {
+    const result = await pool.query(`
+        SELECT
+            (SELECT COUNT(*)
+             FROM campaign_recipients
+             WHERE DATE(email_sent_at) = CURRENT_DATE) AS emails_today,
+
+            (SELECT COUNT(*)
+             FROM campaign_recipients
+             WHERE DATE(survey_completed_at) = CURRENT_DATE) AS responses_today,
+
+            (SELECT COUNT(*)
+             FROM recipients
+             WHERE DATE(created_at) = CURRENT_DATE) AS recipients_today
+    `);
+
+    return result.rows[0];
+}
+async function getEvolutionStats() {
+
+    const result = await pool.query(`
+
+        SELECT
+
+        (
+            SELECT COUNT(*)
+            FROM campaigns
+            WHERE DATE(created_at) >= CURRENT_DATE - INTERVAL '7 days'
+        ) AS campaigns_week,
+
+        (
+            SELECT COUNT(*)
+            FROM campaigns
+            WHERE DATE(created_at)
+            BETWEEN CURRENT_DATE - INTERVAL '14 days'
+            AND CURRENT_DATE - INTERVAL '8 days'
+        ) AS campaigns_last_week,
+
+        (
+            SELECT COUNT(*)
+            FROM campaign_recipients
+            WHERE DATE(email_sent_at) >= CURRENT_DATE - INTERVAL '7 days'
+        ) AS emails_week,
+
+        (
+            SELECT COUNT(*)
+            FROM campaign_recipients
+            WHERE DATE(email_sent_at)
+            BETWEEN CURRENT_DATE - INTERVAL '14 days'
+            AND CURRENT_DATE - INTERVAL '8 days'
+        ) AS emails_last_week,
+
+        (
+            SELECT COUNT(*)
+            FROM campaign_recipients
+            WHERE DATE(survey_completed_at) >= CURRENT_DATE - INTERVAL '7 days'
+        ) AS responses_week,
+
+        (
+            SELECT COUNT(*)
+            FROM campaign_recipients
+            WHERE DATE(survey_completed_at)
+            BETWEEN CURRENT_DATE - INTERVAL '14 days'
+            AND CURRENT_DATE - INTERVAL '8 days'
+        ) AS responses_last_week,
+
+        (
+            SELECT COUNT(*)
+            FROM recipients
+            WHERE DATE(created_at) >= CURRENT_DATE - INTERVAL '7 days'
+        ) AS recipients_week,
+
+        (
+            SELECT COUNT(*)
+            FROM recipients
+            WHERE DATE(created_at)
+            BETWEEN CURRENT_DATE - INTERVAL '14 days'
+            AND CURRENT_DATE - INTERVAL '8 days'
+        ) AS recipients_last_week
+
+    `);
+
+    return result.rows[0];
+}
+async function searchDashboard(keyword) {
+
+    const result = await pool.query(
+        `
+        SELECT
+            'recipient' AS type,
+            id,
+            first_name || ' ' || last_name AS title,
+            email AS subtitle
+        FROM recipients
+        WHERE
+            first_name ILIKE $1
+            OR last_name ILIKE $1
+            OR email ILIKE $1
+
+        UNION ALL
+
+        SELECT
+            'campaign' AS type,
+            id,
+            title,
+            status AS subtitle
+        FROM campaigns
+        WHERE
+            title ILIKE $1
+
+        UNION ALL
+
+        SELECT
+            'survey' AS type,
+            id,
+            title,
+            'Questionnaire' AS subtitle
+        FROM surveys
+        WHERE
+            title ILIKE $1
+
+        UNION ALL
+
+        SELECT
+            'template' AS type,
+            id,
+            name AS title,
+            subject AS subtitle
+        FROM email_templates
+        WHERE
+            name ILIKE $1
+            OR subject ILIKE $1
+
+        UNION ALL
+
+        SELECT
+            'user' AS type,
+            id,
+            first_name || ' ' || last_name AS title,
+            email AS subtitle
+        FROM users
+        WHERE
+            first_name ILIKE $1
+            OR last_name ILIKE $1
+            OR email ILIKE $1
+
+        LIMIT 10
+        `,
+        [`%${keyword}%`]
+    );
+
+    return result.rows;
+}
 module.exports = {
     getDashboardStats,
     getActiveCampaigns,
     getRecentActivity,
-    getResponsesLast7Days
+    getResponsesLast7Days,
+    getTodayStats,
+    getEvolutionStats,
+    searchDashboard
 };

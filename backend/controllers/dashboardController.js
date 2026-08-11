@@ -1,7 +1,10 @@
 const { getDashboardStats,
      getActiveCampaigns,
      getRecentActivity,
-     getResponsesLast7Days } = require("../models/dashboardModel");
+     getResponsesLast7Days,
+     getTodayStats,
+    getEvolutionStats,
+searchDashboard } = require("../models/dashboardModel");
 
 async function dashboard(req, res) {
     try {
@@ -60,10 +63,95 @@ async function responsesChart(req, res) {
         res.status(500).json({ message: "Erreur serveur" });
     }
 }
+async function todayStats(req, res) {
+    try {
+        const stats = await getTodayStats();
+        res.json(stats);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server Error" });
+    }
+}
+async function evolutionStats(req, res) {
 
+    try {
+
+        const stats = await getEvolutionStats();
+
+        const calculate = (current, previous) => {
+
+    current = Number(current);
+    previous = Number(previous);
+
+    if (previous === 0) {
+        return current > 0 ? 100 : 0;
+    }
+
+    return (((current - previous) / previous) * 100).toFixed(1);
+
+};
+
+res.json({
+
+    campaignEvolution: calculate(
+        stats.campaigns_week,
+        stats.campaigns_last_week
+    ),
+
+    emailEvolution: calculate(
+        stats.emails_week,
+        stats.emails_last_week
+    ),
+
+    responseEvolution: calculate(
+        stats.responses_week,
+        stats.responses_last_week
+    ),
+
+    recipientEvolution: calculate(
+        stats.recipients_week,
+        stats.recipients_last_week
+    )
+
+});
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            message: "Server Error"
+        });
+
+    }
+
+}
+async function search(req, res) {
+
+    try {
+
+        const keyword = req.query.q || "";
+
+        const results = await searchDashboard(keyword);
+
+        res.json(results);
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            message: "Server error"
+        });
+
+    }
+
+}
 module.exports = {
     dashboard,
     activeCampaigns,
     recentActivity,
-    responsesChart
+    responsesChart,
+    todayStats,
+     evolutionStats,
+     search
 };

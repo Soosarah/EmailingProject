@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulseSurvey — Utilisateurs &amp; rôles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<!-- CSS -->
+    <link rel="stylesheet" href="../components/sidebar.css">
+<link rel="stylesheet" href="../dashboard/dashboard.css">
+<link rel="stylesheet" href="users.css">
+</head>
+<body data-theme="light">
+<div class="app">
+
+  <div id="sidebar-container"></div>
+  <!-- ===== MAIN ===== -->
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <div class="page-title">Utilisateurs &amp; rôles</div>
+        <div class="page-sub">Gérez les comptes de votre équipe et leurs permissions</div>
+      </div>
+
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input type="text" id="userSearchInput" placeholder="Rechercher un utilisateur...">
+      </div>
+
+      <div class="top-actions">
+        <div class="theme-toggle" id="themeToggle">
+          <button class="active" data-mode="light" title="Mode clair">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+          <button data-mode="dark" title="Mode sombre">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="icon-btn" id="refreshBtn" title="Actualiser">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M21 12a9 9 0 10-3.2 6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M21 4v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <div class="admin-chip">
+          <div class="avatar" id="adminAvatar">SA</div>
+          <div>
+            <div class="admin-name" id="adminName"></div>
+            <div class="admin-role" id="adminEmail"></div>
+            <div class="admin-role" id="adminRole"></div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="hero-row">
+        <div>
+          <div class="eyebrow">Gestion des accès</div>
+          <h1 class="welcome-title">Utilisateurs &amp; rôles</h1>
+          <p class="welcome-text">Ajoutez des membres, attribuez-leur un rôle et contrôlez ce à quoi ils ont accès.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-ghost" id="exportUsersBtn">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Exporter
+          </button>
+          <button class="btn" id="newUserBtn">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.3" stroke-linecap="round"/></svg>
+            Nouvel utilisateur
+          </button>
+        </div>
+      </div>
+
+      <!-- Bandeau d'erreur API -->
+      <div class="api-banner" id="apiBanner" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/></svg>
+        <span id="apiBannerText">L'API des utilisateurs n'est pas encore disponible. Affichage de données de démonstration.</span>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stats-grid">
+        <div class="stat-card active">
+          <div class="stat-label">Utilisateurs au total</div>
+          <div class="stat-value" id="statTotal">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Comptes actifs</div>
+          <div class="stat-value" id="statActive">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Administrateurs</div>
+          <div class="stat-value" id="statAdmins">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ajoutés ce mois-ci</div>
+          <div class="stat-value" id="statNew">—</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="users">Utilisateurs</button>
+        <button class="tab-btn" data-tab="roles">Rôles &amp; permissions</button>
+      </div>
+
+      <!-- ===== USERS TAB ===== -->
+      <section class="tab-panel active" id="tab-users">
+        <div class="panel">
+          <div class="panel-head toolbar-head">
+            <h3>Liste des utilisateurs</h3>
+            <div class="toolbar-filters">
+              <select id="roleFilter" class="select-input">
+                <option value="">Tous les rôles</option>
+              </select>
+              <select id="statusFilter" class="select-input">
+                <option value="">Tous les statuts</option>
+                <option value="active">Actif</option>
+                <option value="inactive">Inactif</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="usersLoading" class="loading-state">
+            <div class="spinner"></div>
+            <span>Chargement des utilisateurs…</span>
+          </div>
+
+          <div id="usersTableWrap" style="display:none;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Utilisateur</th>
+                  <th>Rôle</th>
+                  <th>Statut</th>
+                  <th>Créé le</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="empty-state" id="usersEmptyState" style="display:none;">
+            <div class="empty-emoji">🔎</div>
+            <div class="empty-title">Aucun utilisateur trouvé</div>
+            <div class="empty-sub">Essayez un autre mot-clé ou modifiez vos filtres.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ROLES TAB ===== -->
+      <section class="tab-panel" id="tab-roles">
+        <div class="panel">
+          <div class="panel-head toolbar-head">
+            <div>
+              <h3>Rôles &amp; permissions</h3>
+              <p class="field-hint">Sélectionnez un rôle puis choisissez ses permissions.</p>
+            </div>
+          </div>
+
+          <div class="permissions-layout">
+
+            <!-- ===== ROLES ===== -->
+            <div class="roles-modal-section">
+              <div class="section-title">Rôles</div>
+              <div id="rolesModalList"></div>
+            </div>
+
+            <!-- ===== PERMISSIONS ===== -->
+            <div class="permissions-modal-section">
+              <div class="permissions-header">
+                <div>
+                  <div class="section-title">Permissions</div>
+                  <div id="selectedRoleLabel" class="selected-role-label">Sélectionnez un rôle</div>
+                </div>
+                <label class="select-all-label">
+                  <input type="checkbox" id="selectAllPermissions">
+                  <span>Tout sélectionner</span>
+                </label>
+              </div>
+              <div id="permissionsList"></div>
+            </div>
+
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn" id="savePermissionsBtn">Enregistrer</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== USER MODAL (create / edit) ===== -->
+<div class="modal-overlay" id="userModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="userModalTitle">Nouvel utilisateur</h3>
+      <button class="modal-close" id="userModalClose">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <form id="userForm">
+      <input type="hidden" id="userId">
+      <div class="form-row two">
+        <div class="form-field">
+          <label for="firstName">Prénom</label>
+          <input type="text" id="firstName" required placeholder="Nihel">
+        </div>
+        <div class="form-field">
+          <label for="lastName">Nom</label>
+          <input type="text" id="lastName" required placeholder="Boussaha">
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="email">Adresse e-mail</label>
+        <input type="email" id="email" required placeholder="nom@djezzy.dz">
+        <span class="field-error" id="emailError"></span>
+      </div>
+      <div class="form-row two">
+        <div class="form-field">
+          <label for="roleSelect">Rôle</label>
+          <select id="roleSelect" required></select>
+        </div>
+        <div class="form-field">
+          <label for="statusSelect">Statut</label>
+          <select id="statusSelect">
+            <option value="active">Actif</option>
+            <option value="inactive">Inactif</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field" id="passwordField">
+        <label for="password">Mot de passe temporaire</label>
+        <input type="password" id="password" placeholder="Minimum 8 caractères" minlength="8">
+        <span class="field-hint">L'utilisateur devra changer ce mot de passe à sa première connexion.</span>
+      </div>
+      <div class="form-error" id="formError" style="display:none;"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="userModalCancel">Annuler</button>
+        <button type="submit" class="btn" id="userModalSubmit">
+          <span class="btn-label">Créer l'utilisateur</span>
+          <span class="btn-spinner" style="display:none;"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== DELETE CONFIRM MODAL ===== -->
+<div class="modal-overlay" id="deleteModalOverlay">
+  <div class="modal modal-sm">
+    <div class="modal-head">
+      <h3>Supprimer l'utilisateur</h3>
+      <button class="modal-close" id="deleteModalClose">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <p class="delete-text">Cette action est irréversible. <strong id="deleteUserName"></strong> perdra immédiatement l'accès à la plateforme.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="deleteModalCancel">Annuler</button>
+      <button type="button" class="btn btn-danger" id="deleteModalConfirm">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="toast" id="toast"></div>
+ <script src="../components/sidebar.js"></script>
+<script src="users.js"></script>
+</body>
+</html>

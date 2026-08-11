@@ -1,37 +1,44 @@
-
-const path = require("path");
-const authRoutes = require("./routes/authRoutes");
-const { findUserByEmail } = require("./models/userModel");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const dashboardRoutes = require("./routes/dashboardRoutes");
+
+const path = require("path");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../public")));
-app.use("/api/auth", authRoutes);
+
+app.use(express.static(path.join(__dirname,"../public")));
+
+const userRoutes = require("./routes/userRoutes");
+
+app.use("/api/users", userRoutes);
+const roleRoutes = require("./routes/roleRoutes");
+
+app.use("/api/roles", roleRoutes);
+const permissionRoutes = require("./routes/permissionRoutes");
+
+app.use("/api/permissions", permissionRoutes);
+
+const dashboardRoutes = require("./routes/dashboardRoutes");
 app.use("/api/dashboard", dashboardRoutes);
+
+const authRoutes = require("./routes/authRoutes");
+app.use("/api/auth", authRoutes);
 
 const pool = require("./config/db");
 
-pool.query("SELECT NOW()", (err, result) => {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log("Database connected!");
-        console.log(result.rows);
-    }
-});
-async function testDatabase() {
-    const user = await findUserByEmail("admin@djezzy.dz");
+pool.query("SELECT NOW()")
+.then(()=>{
 
-    console.log(user);
-}
+    console.log("✅ PostgreSQL connecté");
 
-testDatabase();
-app.listen(process.env.PORT, () => {
+})
+.catch(console.error);
+
+app.listen(process.env.PORT,()=>{
+
     console.log(`Server running on port ${process.env.PORT}`);
+
 });

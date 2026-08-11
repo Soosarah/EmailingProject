@@ -42,6 +42,7 @@ async function register(req, res) {
 
 async function login(req, res) {
     try {
+
         const { email, password } = req.body;
 
         const result = await pool.query(
@@ -50,58 +51,137 @@ async function login(req, res) {
         );
 
         if (result.rows.length === 0) {
+
             return res.status(401).json({
                 message: "Invalid email or password"
             });
+
         }
 
         const user = result.rows[0];
 
-        const isMatch = await bcrypt.compare(password, user.password_hash);
+        const isMatch = await bcrypt.compare(
+            password,
+            user.password_hash
+        );
 
         if (!isMatch) {
+
             return res.status(401).json({
                 message: "Invalid email or password"
             });
+
         }
 
+        // ==========================================
+        // RÉCUPÉRER LES PERMISSIONS DU RÔLE
+        // ==========================================
+
+        let permissions = [];
+
+        if (user.role === "ADMIN") {
+
+            // L'administrateur possède toutes les permissions
+            permissions = ["*"];
+
+        } else {
+
+            const permissionsResult = await pool.query(
+
+                `SELECT
+                    p.id,
+                    p.label
+                 FROM roles r
+                 INNER JOIN role_permissions rp
+                    ON rp.role_id = r.id
+                 INNER JOIN permissions p
+                    ON p.id = rp.permission_id
+                 WHERE r.name = $1
+                 ORDER BY p.id`,
+
+                [user.role]
+
+            );
+
+            permissions = permissionsResult.rows;
+
+        }
+
+        // ==========================================
+        // JWT
+        // ==========================================
+
         const token = jwt.sign(
+
             {
                 id: user.id,
                 email: user.email,
                 role: user.role
             },
+
             process.env.JWT_SECRET,
+
             {
                 expiresIn: "24h"
             }
+
         );
+
+        // ==========================================
+        // LOG
+        // ==========================================
+
         await addLog(
-    user.id,
-    "LOGIN",
-    "USER",
-    user.id,
-    req.ip
-);
+            user.id,
+            "LOGIN",
+            "USER",
+            user.id,
+            req.ip
+        );
+
+        // ==========================================
+        // RÉPONSE
+        // ==========================================
+
         res.json({
+
             message: "Login successful",
+
             token,
+
             user: {
+
                 id: user.id,
+
                 first_name: user.first_name,
+
                 last_name: user.last_name,
+
                 email: user.email,
-                role: user.role
+
+                role: user.role,
+
+                status: user.status,
+
+                permissions: permissions
+
             }
+
         });
 
-    } catch (error) {
-        console.error(error);
+    }
+
+    catch (error) {
+
+        console.error("LOGIN ERROR:", error);
+
         res.status(500).json({
             message: "Internal server error"
         });
+
     }
 }
+
 async function requestPasswordReset(req, res) {
     try {
         const { email } = req.body;

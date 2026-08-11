@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>PulseSurvey — Questionnaires</title>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Sidebar -->
+    <link
+        rel="stylesheet"
+        href="../components/sidebar.css"
+    >
+
+    <!-- Page -->
+    <link
+        rel="stylesheet"
+        href="questionnaires.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     LAYOUT
+     ===================================================== -->
+
+<div class="app-layout">
+
+
+    <!-- =================================================
+         SIDEBAR
+         ================================================= -->
+
+    <div id="sidebar-container"></div>
+
+
+    <!-- =================================================
+         MAIN
+         ================================================= -->
+
+    <main class="main-content">
+
+
+        <!-- =============================================
+             HEADER
+             ============================================= -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Questionnaires
+                </h1>
+
+                <p>
+                    Créez et gérez les questionnaires de vos campagnes
+                </p>
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+                <button
+                    class="btn-primary"
+                    id="createSurveyBtn"
+                >
+
+                    <span>+</span>
+
+                    Créer un questionnaire
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =============================================
+             CONTENT
+             ============================================= -->
+
+        <section class="content">
+
+
+            <!-- =========================================
+                 LISTE
+                 ========================================= -->
+
+            <div id="surveyListView">
+
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Vos questionnaires
+                        </h2>
+
+                        <p>
+                            Les questionnaires associés à vos campagnes.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Loading -->
+
+                <div
+                    id="loading"
+                    class="loading"
+                >
+
+                    Chargement...
+
+                </div>
+
+
+
+                <!-- Empty -->
+
+                <div
+                    id="emptyState"
+                    class="empty-state hidden"
+                >
+
+                    <div class="empty-icon">
+                        ?
+                    </div>
+
+                    <h3>
+                        Aucun questionnaire
+                    </h3>
+
+                    <p>
+                        Créez votre premier questionnaire
+                        pour une campagne.
+                    </p>
+
+                    <button
+                        class="btn-primary"
+                        id="emptyCreateBtn"
+                    >
+
+                        + Créer un questionnaire
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- Cards -->
+
+                <div
+                    id="surveyList"
+                    class="survey-grid"
+                ></div>
+
+
+            </div>
+
+
+
+            <!-- =========================================
+                 BUILDER
+                 ========================================= -->
+
+            <div
+                id="builderView"
+                class="hidden"
+            >
+
+
+                <!-- Builder header -->
+
+                <div class="builder-header">
+
+                    <button
+                        class="back-btn"
+                        id="backToListBtn"
+                    >
+
+                        ←
+
+                        Retour aux questionnaires
+
+                    </button>
+
+
+                    <div class="builder-actions">
+
+                        <button
+                            class="btn-secondary"
+                            id="saveDraftBtn"
+                        >
+
+                            Enregistrer
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     INFORMATIONS
+                     ===================================== -->
+
+                <div class="builder-card">
+
+                    <div class="builder-title">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                NOUVEAU QUESTIONNAIRE
+                            </span>
+
+                            <h2>
+                                Configuration
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+
+                        <div class="form-group">
+
+                            <label for="surveyTitle">
+
+                                Titre du questionnaire
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="surveyTitle"
+                                placeholder="Ex : Satisfaction client"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="campaignSelect">
+
+                                Campagne
+
+                            </label>
+
+                            <select id="campaignSelect">
+
+                                <option value="">
+                                    Sélectionnez une campagne
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     BUILDER
+                     ===================================== -->
+
+                <div class="builder-layout">
+
+
+                    <!-- =================================
+                         PAGES
+                         ================================= -->
+
+                    <aside class="pages-panel">
+
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="panel-label">
+                                    STRUCTURE
+                                </span>
+
+                                <h3>
+                                    Pages
+                                </h3>
+
+                            </div>
+
+
+                            <span
+                                id="pageCounter"
+                                class="page-counter"
+                            >
+                                0 / 10
+                            </span>
+
+                        </div>
+
+
+
+                        <div
+                            id="pagesList"
+                            class="pages-list"
+                        ></div>
+
+
+
+                        <button
+                            class="add-page-btn"
+                            id="addPageBtn"
+                        >
+
+                            +
+
+                            Ajouter une page
+
+                        </button>
+
+
+                    </aside>
+
+
+
+                    <!-- =================================
+                         PAGE EDITOR
+                         ================================= -->
+
+                    <section class="page-editor">
+
+
+                        <div
+                            id="pageEditorEmpty"
+                            class="editor-empty"
+                        >
+
+                            <div class="editor-empty-icon">
+                                +
+                            </div>
+
+                            <h3>
+                                Commencez votre questionnaire
+                            </h3>
+
+                            <p>
+                                Ajoutez une page pour commencer
+                                à construire votre questionnaire.
+                            </p>
+
+                        </div>
+
+
+
+                        <div
+                            id="pageEditor"
+                            class="hidden"
+                        >
+
+
+                            <!-- Page title -->
+
+                            <div class="page-editor-header">
+
+                                <div>
+
+                                    <span class="panel-label">
+                                        PAGE
+                                    </span>
+
+                                    <h2 id="currentPageTitle">
+                                        Page 1
+                                    </h2>
+
+                                </div>
+
+
+                                <button
+                                    class="danger-btn"
+                                    id="deletePageBtn"
+                                >
+
+                                    Supprimer la page
+
+                                </button>
+
+                            </div>
+
+
+
+                            <!-- Page name -->
+
+                            <div class="form-group">
+
+                                <label for="pageTitle">
+
+                                    Nom de la page
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="pageTitle"
+                                    placeholder="Ex : Votre profil"
+                                >
+
+                            </div>
+
+
+
+                            <!-- Questions -->
+
+                            <div class="questions-header">
+
+                                <div>
+
+                                    <span class="panel-label">
+                                        QUESTIONS
+                                    </span>
+
+                                    <h3>
+                                        Questions de cette page
+                                    </h3>
+
+                                </div>
+
+
+                                <button
+                                    class="btn-primary small"
+                                    id="addQuestionBtn"
+                                >
+
+                                    + Ajouter une question
+
+                                </button>
+
+                            </div>
+
+
+
+                            <div
+                                id="questionsList"
+                                class="questions-list"
+                            ></div>
+
+
+                        </div>
+
+                    </section>
+
+
+
+                    <!-- =================================
+                         QUESTION PROPERTIES
+                         ================================= -->
+
+                    <aside class="properties-panel">
+
+
+                        <div
+                            id="propertiesEmpty"
+                            class="properties-empty"
+                        >
+
+                            <span>
+                                Sélectionnez une question
+                            </span>
+
+                        </div>
+
+
+
+                        <div
+                            id="questionProperties"
+                            class="hidden"
+                        >
+
+
+                            <div class="panel-header">
+
+                                <div>
+
+                                    <span class="panel-label">
+                                        PROPRIÉTÉS
+                                    </span>
+
+                                    <h3>
+                                        Question
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="form-group">
+
+                                <label for="questionText">
+
+                                    Question
+
+                                </label>
+
+                                <textarea
+                                    id="questionText"
+                                    rows="4"
+                                    placeholder="Écrivez votre question..."
+                                ></textarea>
+
+                            </div>
+
+
+
+                            <div class="form-group">
+
+                                <label for="questionType">
+
+                                    Type
+
+                                </label>
+
+                                <select id="questionType">
+
+                                    <option value="text">
+                                        Texte
+                                    </option>
+
+                                    <option value="email">
+                                        Email
+                                    </option>
+
+                                    <option value="number">
+                                        Nombre
+                                    </option>
+
+                                    <option value="date">
+                                        Date
+                                    </option>
+
+                                    <option value="boolean">
+                                        Oui / Non
+                                    </option>
+
+                                    <option value="single_choice">
+                                        Choix unique
+                                    </option>
+
+                                    <option value="multiple_choice">
+                                        Choix multiple
+                                    </option>
+
+                                    <option value="rating">
+                                        Note
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <label class="checkbox-row">
+
+                                <input
+                                    type="checkbox"
+                                    id="questionRequired"
+                                >
+
+                                <span>
+                                    Réponse obligatoire
+                                </span>
+
+                            </label>
+
+
+
+                            <!-- Options -->
+
+                            <div
+                                id="optionsEditor"
+                                class="options-editor hidden"
+                            >
+
+                                <div class="options-title">
+
+                                    Options
+
+                                </div>
+
+
+                                <div
+                                    id="optionsList"
+                                ></div>
+
+
+                                <button
+                                    type="button"
+                                    id="addOptionBtn"
+                                    class="add-option-btn"
+                                >
+
+                                    + Ajouter une option
+
+                                </button>
+
+                            </div>
+
+
+
+                            <!-- Logic -->
+
+                            <div class="logic-section">
+
+                                <div class="logic-title">
+
+                                    Navigation conditionnelle
+
+                                </div>
+
+                                <p>
+
+                                    Nous allons utiliser cette section
+                                    pour définir vers quelle page
+                                    le client sera envoyé selon
+                                    sa réponse.
+
+                                </p>
+
+
+                                <div class="coming-soon">
+
+                                    Logique conditionnelle —
+                                    prochaine étape
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+                    </aside>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+     ===================================================== -->
+
+<script
+    src="../components/sidebar.js"
+></script>
+
+<script
+    src="questionnaires.js"
+></script>
+
+
+</body>
+
+</html>
