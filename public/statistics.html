@@ -1,0 +1,2572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Statistics | Djezzy</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(218, 24, 24, 0.07), transparent 30%),
+                #f6f7f9;
+            color: #171717;
+        }
+
+        .page-container {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .stat-card,
+        .chart-card,
+        .table-card,
+        .export-card {
+            transition: all .2s ease;
+        }
+
+        .stat-card:hover,
+        .export-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0,0,0,.07);
+        }
+
+        .icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff1f1;
+            color: #d91e1e;
+            font-weight: 800;
+        }
+
+        .export-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: #fff1f1;
+            color: #d91e1e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .export-button {
+            transition: all .2s ease;
+        }
+
+        .export-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(218,24,24,.22);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .status-pill.sent {
+            background: #ecfdf3;
+            color: #15803d;
+        }
+
+        .status-pill.draft {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .status-pill.scheduled {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .status-pill.default {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .progress-track {
+            height: 6px;
+            width: 80px;
+            background: #eeeeee;
+            border-radius: 999px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 7px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #d91e1e;
+            border-radius: 999px;
+        }
+
+        .table-row {
+            transition: background .15s ease;
+        }
+
+        .table-row:hover {
+            background: #fafafa;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            color: #8a8a8a;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .export-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .export-modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 760px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 70px rgba(0,0,0,.2);
+        }
+
+        .export-option {
+            border: 1px solid #ececec;
+            border-radius: 16px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .export-option:hover {
+            border-color: #d91e1e;
+            background: #fffafa;
+            transform: translateY(-1px);
+        }
+
+        .export-option h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .export-option p {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .report-preview {
+            background: #f7f7f7;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 18px;
+        }
+
+        .report-preview-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .report-line {
+            font-size: 12px;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .empty-state {
+            padding: 55px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        @media print {
+
+            body {
+                background: white !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .page-container {
+                max-width: none;
+                padding: 0 !important;
+            }
+
+            .chart-card,
+            .table-card,
+            .stat-card {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="page-container px-8 py-8">
+
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8 no-print">
+
+        <div>
+
+            <div class="flex items-center gap-2 mb-2">
+
+                <span class="w-2 h-2 rounded-full bg-red-600"></span>
+
+                <span class="text-xs font-bold uppercase tracking-widest text-red-600">
+                    Analytics
+                </span>
+
+            </div>
+
+            <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight">
+                Campaign Statistics
+            </h1>
+
+            <p class="text-gray-500 text-sm mt-2">
+                Monitor campaigns, customer engagement and survey performance.
+            </p>
+
+        </div>
+
+        <button
+            id="openExportCenter"
+            class="export-button inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#d91e1e] text-white text-sm font-semibold">
+
+            ↓
+
+            Export Center
+
+        </button>
+
+    </div>
+
+
+    <div id="loading"
+         class="bg-white rounded-2xl border border-gray-100 p-8 text-gray-500 shadow-sm">
+
+        <div class="flex items-center gap-3">
+
+            <div class="w-5 h-5 border-2 border-gray-200 border-t-red-600 rounded-full animate-spin"></div>
+
+            <span>Loading statistics...</span>
+
+        </div>
+
+    </div>
+
+
+    <div id="error"
+         class="hidden bg-red-50 border border-red-200 text-red-700 rounded-2xl p-5 mb-6">
+    </div>
+
+
+    <section id="statisticsContent" class="hidden">
+
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-5">
+
+
+            <div class="stat-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+
+                <div class="flex items-start justify-between">
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            Total Campaigns
+                        </p>
+
+                        <p id="totalCampaigns"
+                           class="text-3xl font-extrabold mt-3">
+                            0
+                        </p>
+
+                        <p class="text-xs text-gray-400 mt-2">
+                            All campaigns
+                        </p>
+
+                    </div>
+
+                    <div class="icon-box">
+                        ✦
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+
+                <div class="flex items-start justify-between">
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            Campaigns Launched
+                        </p>
+
+                        <p id="launchedCampaigns"
+                           class="text-3xl font-extrabold mt-3">
+                            0
+                        </p>
+
+                        <p class="text-xs text-gray-400 mt-2">
+                            Successfully launched
+                        </p>
+
+                    </div>
+
+                    <div class="icon-box">
+                        ↗
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+
+                <div class="flex items-start justify-between">
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            Customers
+                        </p>
+
+                        <p id="totalRecipients"
+                           class="text-3xl font-extrabold mt-3">
+                            0
+                        </p>
+
+                        <p class="text-xs text-gray-400 mt-2">
+                            Recipients in database
+                        </p>
+
+                    </div>
+
+                    <div class="icon-box">
+                        ♙
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+
+                <div class="flex items-start justify-between">
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            Surveys Completed
+                        </p>
+
+                        <p id="completedSurveys"
+                           class="text-3xl font-extrabold mt-3">
+                            0
+                        </p>
+
+                        <p class="text-xs text-gray-400 mt-2">
+                            Completed responses
+                        </p>
+
+                    </div>
+
+                    <div class="icon-box">
+                        ✓
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
+
+
+            <div class="stat-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+
+                <div class="flex items-center gap-4">
+
+                    <div class="icon-box">
+                        ✉
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            Emails Sent
+                        </p>
+
+                        <p id="emailsSent"
+                           class="text-2xl font-extrabold mt-1">
+                            0
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+
+                <div class="flex items-center gap-4">
+
+                    <div class="icon-box">
+                        ◉
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            Emails Opened
+                        </p>
+
+                        <p id="emailsOpened"
+                           class="text-2xl font-extrabold mt-1">
+                            0
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+
+                <div class="flex items-center gap-4">
+
+                    <div class="icon-box">
+                        —
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            Emails Ignored
+                        </p>
+
+                        <p id="emailsIgnored"
+                           class="text-2xl font-extrabold mt-1">
+                            0
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+
+                <div class="flex items-center gap-4">
+
+                    <div class="icon-box">
+                        %
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            Open Rate
+                        </p>
+
+                        <p id="openRate"
+                           class="text-2xl font-extrabold mt-1">
+                            0%
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
+
+
+            <div class="chart-card bg-white rounded-2xl border border-gray-100 p-6">
+
+                <div class="flex items-start justify-between mb-6">
+
+                    <div>
+
+                        <h2 class="section-title">
+                            Email Engagement
+                        </h2>
+
+                        <p class="section-subtitle">
+                            Opened versus ignored emails
+                        </p>
+
+                    </div>
+
+                    <div class="icon-box">
+                        ◉
+                    </div>
+
+                </div>
+
+                <div class="relative h-72">
+
+                    <canvas id="engagementChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-card bg-white rounded-2xl border border-gray-100 p-6">
+
+                <div class="flex items-start justify-between mb-6">
+
+                    <div>
+
+                        <h2 class="section-title">
+                            Survey Performance
+                        </h2>
+
+                        <p class="section-subtitle">
+                            Sent, opened and completed
+                        </p>
+
+                    </div>
+
+                    <div class="icon-box">
+                        ✓
+                    </div>
+
+                </div>
+
+                <div class="relative h-72">
+
+                    <canvas id="surveyChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-card bg-white rounded-2xl border border-gray-100 overflow-hidden">
+
+
+            <div class="p-6 border-b border-gray-100">
+
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+
+                    <div>
+
+                        <h2 class="section-title">
+                            Campaign Performance
+                        </h2>
+
+                        <p class="section-subtitle">
+                            Calculated from campaign and recipient records.
+                        </p>
+
+                    </div>
+
+                    <span class="inline-flex items-center gap-2 text-xs font-medium text-gray-500">
+
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+
+                        Live database data
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full text-sm">
+
+                    <thead class="bg-gray-50/80 border-b border-gray-100">
+
+                    <tr>
+
+                        <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wide text-gray-400">
+                            Campaign
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wide text-gray-400">
+                            Status
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wide text-gray-400">
+                            Recipients
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wide text-gray-400">
+                            Sent
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wide text-gray-400">
+                            Opened
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wide text-gray-400">
+                            Responses
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wide text-gray-400">
+                            Open Rate
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wide text-gray-400">
+                            Response Rate
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="campaignTable"
+                           class="divide-y divide-gray-100">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</main>
+
+
+<div id="exportModal" class="export-modal">
+
+    <div class="modal-box">
+
+        <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+
+            <div>
+
+                <p class="text-xs font-bold uppercase tracking-widest text-red-600">
+                    Reporting
+                </p>
+
+                <h2 class="text-2xl font-extrabold mt-1">
+                    Export Center
+                </h2>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Generate reports directly from your current statistics.
+                </p>
+
+            </div>
+
+            <button
+                id="closeExportCenter"
+                class="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="p-6">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+
+                <div
+                    class="export-option"
+                    id="exportExcel">
+
+                    <div class="flex gap-4">
+
+                        <div class="export-icon">
+                            XLS
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Excel Report
+                            </h3>
+
+                            <p>
+                                Download a multi-sheet workbook containing summary and campaign performance.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="export-option"
+                    id="exportCsv">
+
+                    <div class="flex gap-4">
+
+                        <div class="export-icon">
+                            CSV
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Campaign CSV
+                            </h3>
+
+                            <p>
+                                Export campaign performance as a simple CSV file.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="export-option"
+                    id="exportPrint">
+
+                    <div class="flex gap-4">
+
+                        <div class="export-icon">
+                            PDF
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Printable Report
+                            </h3>
+
+                            <p>
+                                Generate a clean report with KPIs, charts and campaign results.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="export-option"
+                    id="exportSummary">
+
+                    <div class="flex gap-4">
+
+                        <div class="export-icon">
+                            TXT
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Written Summary
+                            </h3>
+
+                            <p>
+                                Download a written management summary of campaign performance.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="report-preview">
+
+                <div class="report-preview-title">
+                    Report preview
+                </div>
+
+                <div
+                    id="reportPreview"
+                    class="text-sm text-gray-600">
+                    Your report will be generated using the currently loaded database statistics.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const API = "http://localhost:5000/api";
+
+const token = localStorage.getItem("token");
+
+const user = JSON.parse(
+    localStorage.getItem("user")
+);
+
+let statistics = null;
+
+let engagementChart = null;
+
+let surveyChart = null;
+
+
+if (!token || !user) {
+
+    window.location.href =
+        "djezzy_login.html";
+
+}
+
+
+async function loadStatistics() {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/statistics`,
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        if (
+            response.status === 401 ||
+            response.status === 403
+        ) {
+
+            localStorage.clear();
+
+            window.location.href =
+                "djezzy_login.html";
+
+            return;
+
+        }
+
+
+        if (!response.ok) {
+
+            const error =
+                await response
+                    .json()
+                    .catch(() => ({}));
+
+
+            throw new Error(
+                error.message ||
+                "Unable to load statistics."
+            );
+
+        }
+
+
+        statistics =
+            await response.json();
+
+
+        renderStatistics();
+
+
+    } catch (err) {
+
+        console.error(
+            "STATISTICS ERROR:",
+            err
+        );
+
+
+        document
+            .getElementById("loading")
+            .classList.add("hidden");
+
+
+        const errorElement =
+            document.getElementById("error");
+
+
+        errorElement.textContent =
+            err.message ||
+            "Unable to load statistics.";
+
+
+        errorElement.classList.remove(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+function renderStatistics() {
+
+    const campaigns =
+        statistics.campaigns || {};
+
+    const recipients =
+        statistics.recipients || {};
+
+    const delivery =
+        statistics.delivery || {};
+
+    const performance =
+        statistics.performance || {};
+
+
+    document.getElementById(
+        "totalCampaigns"
+    ).textContent =
+        campaigns.total || 0;
+
+
+    document.getElementById(
+        "launchedCampaigns"
+    ).textContent =
+        campaigns.launched || 0;
+
+
+    document.getElementById(
+        "totalRecipients"
+    ).textContent =
+        recipients.total_recipients || 0;
+
+
+    document.getElementById(
+        "completedSurveys"
+    ).textContent =
+        delivery.surveys_completed || 0;
+
+
+    document.getElementById(
+        "emailsSent"
+    ).textContent =
+        delivery.emails_sent || 0;
+
+
+    document.getElementById(
+        "emailsOpened"
+    ).textContent =
+        delivery.emails_opened || 0;
+
+
+    document.getElementById(
+        "emailsIgnored"
+    ).textContent =
+        delivery.emails_ignored || 0;
+
+
+    document.getElementById(
+        "openRate"
+    ).textContent =
+        `${performance.open_rate || 0}%`;
+
+
+    renderCampaignTable();
+
+    renderCharts();
+
+
+    document
+        .getElementById("loading")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("statisticsContent")
+        .classList.remove("hidden");
+
+}
+
+
+function renderCampaignTable() {
+
+    const table =
+        document.getElementById(
+            "campaignTable"
+        );
+
+
+    table.innerHTML = "";
+
+
+    const campaigns =
+        statistics.campaign_performance || [];
+
+
+    if (!campaigns.length) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty-state">
+                    No campaign performance data.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    campaigns.forEach(
+        campaign => {
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.className =
+                "table-row";
+
+
+            const openRate =
+                Number(
+                    campaign.open_rate || 0
+                );
+
+
+            const responseRate =
+                Number(
+                    campaign.response_rate || 0
+                );
+
+
+            const status =
+                String(
+                    campaign.status || "-"
+                ).toLowerCase();
+
+
+            let statusClass =
+                "default";
+
+
+            if (
+                status === "sent"
+            ) {
+
+                statusClass =
+                    "sent";
+
+            }
+
+            else if (
+                status === "draft"
+            ) {
+
+                statusClass =
+                    "draft";
+
+            }
+
+            else if (
+                status === "scheduled"
+            ) {
+
+                statusClass =
+                    "scheduled";
+
+            }
+
+
+            row.innerHTML = `
+
+                <td class="px-6 py-5 font-semibold text-gray-900">
+                    ${escapeHtml(
+                        campaign.title ||
+                        "Untitled"
+                    )}
+                </td>
+
+                <td class="px-6 py-5">
+
+                    <span class="status-pill ${statusClass}">
+
+                        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+
+                        ${escapeHtml(
+                            campaign.status ||
+                            "-"
+                        )}
+
+                    </span>
+
+                </td>
+
+                <td class="px-6 py-5">
+                    ${Number(
+                        campaign.recipients || 0
+                    )}
+                </td>
+
+                <td class="px-6 py-5">
+                    ${Number(
+                        campaign.sent || 0
+                    )}
+                </td>
+
+                <td class="px-6 py-5">
+                    ${Number(
+                        campaign.opened || 0
+                    )}
+                </td>
+
+                <td class="px-6 py-5">
+                    ${Number(
+                        campaign.responses || 0
+                    )}
+                </td>
+
+                <td class="px-6 py-5">
+
+                    <div class="flex items-center">
+
+                        <span class="progress-track">
+
+                            <span
+                                class="progress-bar"
+                                style="width:${Math.min(
+                                    openRate,
+                                    100
+                                )}%">
+                            </span>
+
+                        </span>
+
+                        <span class="font-semibold">
+                            ${openRate}%
+                        </span>
+
+                    </div>
+
+                </td>
+
+                <td class="px-6 py-5">
+
+                    <div class="flex items-center">
+
+                        <span class="progress-track">
+
+                            <span
+                                class="progress-bar"
+                                style="width:${Math.min(
+                                    responseRate,
+                                    100
+                                )}%">
+                            </span>
+
+                        </span>
+
+                        <span class="font-semibold">
+                            ${responseRate}%
+                        </span>
+
+                    </div>
+
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        }
+    );
+
+}
+
+
+function renderCharts() {
+
+    const delivery =
+        statistics.delivery || {};
+
+
+    const performance =
+        statistics.performance || {};
+
+
+    if (engagementChart) {
+
+        engagementChart.destroy();
+
+    }
+
+
+    if (surveyChart) {
+
+        surveyChart.destroy();
+
+    }
+
+
+    engagementChart =
+        new Chart(
+
+            document.getElementById(
+                "engagementChart"
+            ),
+
+            {
+
+                type: "doughnut",
+
+                data: {
+
+                    labels: [
+                        "Opened",
+                        "Ignored"
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            data: [
+
+                                Number(
+                                    delivery.emails_opened || 0
+                                ),
+
+                                Number(
+                                    delivery.emails_ignored || 0
+                                )
+
+                            ],
+
+                            backgroundColor: [
+                                "#d91e1e",
+                                "#e5e7eb"
+                            ],
+
+                            borderWidth: 0
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    cutout: "72%",
+
+                    plugins: {
+
+                        legend: {
+
+                            position: "bottom",
+
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+
+    surveyChart =
+        new Chart(
+
+            document.getElementById(
+                "surveyChart"
+            ),
+
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: [
+                        "Sent",
+                        "Opened",
+                        "Completed"
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            data: [
+
+                                Number(
+                                    performance.sent || 0
+                                ),
+
+                                Number(
+                                    performance.opened || 0
+                                ),
+
+                                Number(
+                                    performance.completed || 0
+                                )
+
+                            ],
+
+                            backgroundColor: [
+                                "#d91e1e",
+                                "#ef4444",
+                                "#fca5a5"
+                            ],
+
+                            borderRadius: 8,
+
+                            borderSkipped: false
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+                                precision: 0
+                            },
+
+                            grid: {
+                                color: "#f1f1f1"
+                            }
+
+                        },
+
+                        x: {
+
+                            grid: {
+                                display: false
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+}
+
+
+function getSummaryText() {
+
+    const campaigns =
+        statistics.campaigns || {};
+
+    const recipients =
+        statistics.recipients || {};
+
+    const delivery =
+        statistics.delivery || {};
+
+    const performance =
+        statistics.performance || {};
+
+
+    const campaignRows =
+        statistics.campaign_performance || [];
+
+
+    const bestCampaign =
+        campaignRows.length
+            ? [...campaignRows]
+                .sort(
+                    (a,b) =>
+                        Number(b.open_rate || 0) -
+                        Number(a.open_rate || 0)
+                )[0]
+            : null;
+
+
+    const worstCampaign =
+        campaignRows.length
+            ? [...campaignRows]
+                .sort(
+                    (a,b) =>
+                        Number(a.open_rate || 0) -
+                        Number(b.open_rate || 0)
+                )[0]
+            : null;
+
+
+    return {
+
+        title:
+            "Djezzy Campaign Performance Report",
+
+        generated:
+            new Date().toLocaleString(),
+
+        totalCampaigns:
+            campaigns.total || 0,
+
+        launchedCampaigns:
+            campaigns.launched || 0,
+
+        customers:
+            recipients.total_recipients || 0,
+
+        emailsSent:
+            delivery.emails_sent || 0,
+
+        emailsOpened:
+            delivery.emails_opened || 0,
+
+        emailsIgnored:
+            delivery.emails_ignored || 0,
+
+        surveysCompleted:
+            delivery.surveys_completed || 0,
+
+        openRate:
+            performance.open_rate || 0,
+
+        responseRate:
+            performance.response_rate || 0,
+
+        bestCampaign:
+            bestCampaign
+                ? `${bestCampaign.title} (${bestCampaign.open_rate || 0}% open rate)`
+                : "No campaign data",
+
+        worstCampaign:
+            worstCampaign
+                ? `${worstCampaign.title} (${worstCampaign.open_rate || 0}% open rate)`
+                : "No campaign data"
+
+    };
+
+}
+
+
+function exportExcel() {
+
+    if (!statistics) {
+
+        alert(
+            "Statistics have not loaded yet."
+        );
+
+        return;
+
+    }
+
+
+    const report =
+        getSummaryText();
+
+
+    const workbook =
+        XLSX.utils.book_new();
+
+
+    const summary = [
+
+        ["DJEZZY CAMPAIGN PERFORMANCE REPORT", ""],
+
+        ["Generated", report.generated],
+
+        ["", ""],
+
+        ["Metric", "Value"],
+
+        ["Total Campaigns", report.totalCampaigns],
+
+        ["Campaigns Launched", report.launchedCampaigns],
+
+        ["Customers", report.customers],
+
+        ["Emails Sent", report.emailsSent],
+
+        ["Emails Opened", report.emailsOpened],
+
+        ["Emails Ignored", report.emailsIgnored],
+
+        ["Surveys Completed", report.surveysCompleted],
+
+        ["Open Rate", `${report.openRate}%`],
+
+        ["Response Rate", `${report.responseRate}%`],
+
+        ["Best Campaign", report.bestCampaign],
+
+        ["Lowest Performing Campaign", report.worstCampaign]
+
+    ];
+
+
+    const summarySheet =
+        XLSX.utils.aoa_to_sheet(
+            summary
+        );
+
+
+    summarySheet["!cols"] = [
+        { wch: 32 },
+        { wch: 55 }
+    ];
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        summarySheet,
+        "Executive Summary"
+    );
+
+
+    const campaignRows =
+        (
+            statistics.campaign_performance || []
+        ).map(campaign => ({
+
+            Campaign:
+                campaign.title || "",
+
+            Status:
+                campaign.status || "",
+
+            Recipients:
+                Number(
+                    campaign.recipients || 0
+                ),
+
+            Sent:
+                Number(
+                    campaign.sent || 0
+                ),
+
+            Opened:
+                Number(
+                    campaign.opened || 0
+                ),
+
+            Ignored:
+                Number(
+                    campaign.ignored || 0
+                ),
+
+            Responses:
+                Number(
+                    campaign.responses || 0
+                ),
+
+            "Open Rate":
+                `${campaign.open_rate || 0}%`,
+
+            "Response Rate":
+                `${campaign.response_rate || 0}%`
+
+        }));
+
+
+    const campaignSheet =
+        XLSX.utils.json_to_sheet(
+            campaignRows
+        );
+
+
+    campaignSheet["!cols"] = [
+
+        { wch: 35 },
+        { wch: 15 },
+        { wch: 14 },
+        { wch: 12 },
+        { wch: 12 },
+        { wch: 12 },
+        { wch: 14 },
+        { wch: 14 },
+        { wch: 16 }
+
+    ];
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        campaignSheet,
+        "Campaign Performance"
+    );
+
+
+    const engagementRows = [
+
+        {
+            Metric: "Emails Sent",
+            Value: report.emailsSent
+        },
+
+        {
+            Metric: "Emails Opened",
+            Value: report.emailsOpened
+        },
+
+        {
+            Metric: "Emails Ignored",
+            Value: report.emailsIgnored
+        },
+
+        {
+            Metric: "Open Rate",
+            Value: `${report.openRate}%`
+        }
+
+    ];
+
+
+    const engagementSheet =
+        XLSX.utils.json_to_sheet(
+            engagementRows
+        );
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        engagementSheet,
+        "Email Engagement"
+    );
+
+
+    const surveyRows = [
+
+        {
+            Metric: "Emails Sent",
+            Value: report.emailsSent
+        },
+
+        {
+            Metric: "Emails Opened",
+            Value: report.emailsOpened
+        },
+
+        {
+            Metric: "Surveys Completed",
+            Value: report.surveysCompleted
+        },
+
+        {
+            Metric: "Response Rate",
+            Value: `${report.responseRate}%`
+        }
+
+    ];
+
+
+    const surveySheet =
+        XLSX.utils.json_to_sheet(
+            surveyRows
+        );
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        surveySheet,
+        "Survey Performance"
+    );
+
+
+    XLSX.writeFile(
+        workbook,
+        "Djezzy-Campaign-Statistics.xlsx"
+    );
+
+}
+
+
+function exportCsv() {
+
+    if (!statistics) {
+
+        alert(
+            "Statistics have not loaded yet."
+        );
+
+        return;
+
+    }
+
+
+    const campaigns =
+        statistics.campaign_performance || [];
+
+
+    const headers = [
+
+        "Campaign",
+        "Status",
+        "Recipients",
+        "Sent",
+        "Opened",
+        "Ignored",
+        "Responses",
+        "Open Rate",
+        "Response Rate"
+
+    ];
+
+
+    const rows =
+        campaigns.map(campaign => [
+
+            campaign.title || "",
+
+            campaign.status || "",
+
+            campaign.recipients || 0,
+
+            campaign.sent || 0,
+
+            campaign.opened || 0,
+
+            campaign.ignored || 0,
+
+            campaign.responses || 0,
+
+            `${campaign.open_rate || 0}%`,
+
+            `${campaign.response_rate || 0}%`
+
+        ]);
+
+
+    const csv = [
+
+        headers,
+
+        ...rows
+
+    ]
+
+        .map(
+            row =>
+                row
+                    .map(
+                        value =>
+                            `"${String(value).replaceAll('"','""')}"`
+                    )
+                    .join(",")
+        )
+
+        .join("\n");
+
+
+    const blob =
+        new Blob(
+            [csv],
+            {
+                type:
+                    "text/csv;charset=utf-8;"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+        "Djezzy-Campaign-Performance.csv";
+
+
+    link.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+function exportWrittenSummary() {
+
+    if (!statistics) {
+
+        alert(
+            "Statistics have not loaded yet."
+        );
+
+        return;
+
+    }
+
+
+    const report =
+        getSummaryText();
+
+
+    const text = `
+
+DJEZZY CAMPAIGN PERFORMANCE REPORT
+
+Generated:
+${report.generated}
+
+EXECUTIVE SUMMARY
+
+Total campaigns: ${report.totalCampaigns}
+
+Campaigns launched: ${report.launchedCampaigns}
+
+Customers in database: ${report.customers}
+
+EMAIL ENGAGEMENT
+
+Emails sent: ${report.emailsSent}
+
+Emails opened: ${report.emailsOpened}
+
+Emails ignored: ${report.emailsIgnored}
+
+Open rate: ${report.openRate}%
+
+SURVEY PERFORMANCE
+
+Surveys completed: ${report.surveysCompleted}
+
+Response rate: ${report.responseRate}%
+
+CAMPAIGN PERFORMANCE
+
+Best performing campaign:
+${report.bestCampaign}
+
+Lowest performing campaign:
+${report.worstCampaign}
+
+This report is generated from the campaign statistics currently returned by the Djezzy platform database.
+
+    `.trim();
+
+
+    const blob =
+        new Blob(
+            [text],
+            {
+                type:
+                    "text/plain;charset=utf-8"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+        "Djezzy-Campaign-Report.txt";
+
+
+    link.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+function exportPrintReport() {
+
+    if (!statistics) {
+        alert("Statistics have not loaded yet.");
+        return;
+    }
+
+    const report = getSummaryText();
+
+    const campaigns =
+        statistics.campaign_performance || [];
+
+    const rows = campaigns.map(campaign => {
+
+        return `
+            <tr>
+                <td>${escapeHtml(campaign.title || "")}</td>
+                <td>${escapeHtml(campaign.status || "")}</td>
+                <td>${Number(campaign.recipients || 0)}</td>
+                <td>${Number(campaign.sent || 0)}</td>
+                <td>${Number(campaign.opened || 0)}</td>
+                <td>${Number(campaign.responses || 0)}</td>
+                <td>${Number(campaign.open_rate || 0)}%</td>
+                <td>${Number(campaign.response_rate || 0)}%</td>
+            </tr>
+        `;
+
+    }).join("");
+
+
+    const printWindow = window.open("", "_blank");
+
+    if (!printWindow) {
+        alert("Please allow pop-ups in your browser to generate the report.");
+        return;
+    }
+
+
+    const html = `
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Djezzy Campaign Report</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            color: #171717;
+            background: white;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        h2 {
+            margin-top: 35px;
+            font-size: 20px;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-top: 8px;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            padding: 18px;
+            border-radius: 10px;
+        }
+
+        .label {
+            color: #777;
+            font-size: 12px;
+        }
+
+        .value {
+            font-size: 25px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .red {
+            color: #d91e1e;
+        }
+
+        .section {
+            margin-top: 30px;
+        }
+
+        .summary-box {
+            background: #f7f7f7;
+            border-radius: 10px;
+            padding: 18px;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            color: #888;
+            font-size: 11px;
+        }
+
+        @media print {
+
+            body {
+                padding: 20px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <h1>
+        Djezzy Campaign Performance Report
+    </h1>
+
+
+    <div class="subtitle">
+        Generated ${escapeHtml(report.generated)}
+    </div>
+
+
+    <div class="grid">
+
+
+        <div class="card">
+
+            <div class="label">
+                Total Campaigns
+            </div>
+
+            <div class="value">
+                ${report.totalCampaigns}
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="label">
+                Campaigns Launched
+            </div>
+
+            <div class="value">
+                ${report.launchedCampaigns}
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="label">
+                Emails Sent
+            </div>
+
+            <div class="value">
+                ${report.emailsSent}
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="label">
+                Open Rate
+            </div>
+
+            <div class="value red">
+                ${report.openRate}%
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            Executive Summary
+        </h2>
+
+        <div class="summary-box">
+
+            <p>
+                <strong>Customers in database:</strong>
+                ${report.customers}
+            </p>
+
+            <p>
+                <strong>Emails opened:</strong>
+                ${report.emailsOpened}
+            </p>
+
+            <p>
+                <strong>Emails ignored:</strong>
+                ${report.emailsIgnored}
+            </p>
+
+            <p>
+                <strong>Surveys completed:</strong>
+                ${report.surveysCompleted}
+            </p>
+
+            <p>
+                <strong>Response rate:</strong>
+                ${report.responseRate}%
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            Email Engagement
+        </h2>
+
+        <p>
+            ${report.emailsOpened}
+            emails were opened out of
+            ${report.emailsSent}
+            sent emails.
+        </p>
+
+        <p>
+            ${report.emailsIgnored}
+            emails were not opened.
+        </p>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            Survey Performance
+        </h2>
+
+        <p>
+            ${report.surveysCompleted}
+            surveys were completed.
+        </p>
+
+        <p>
+            Overall response rate:
+            <strong>${report.responseRate}%</strong>
+        </p>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            Campaign Performance
+        </h2>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Campaign</th>
+                    <th>Status</th>
+                    <th>Recipients</th>
+                    <th>Sent</th>
+                    <th>Opened</th>
+                    <th>Responses</th>
+                    <th>Open Rate</th>
+                    <th>Response Rate</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                ${rows}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="footer">
+
+        Djezzy Campaign Management Platform —
+        Statistics generated from the current database records.
+
+    </div>
+
+
+</body>
+
+</html>
+`;
+
+
+    printWindow.document.open();
+
+    printWindow.document.write(html);
+
+    printWindow.document.close();
+
+
+    printWindow.focus();
+
+
+    setTimeout(() => {
+
+        printWindow.print();
+
+    }, 500);
+
+}
+
+
+function updateReportPreview() {
+
+    if (!statistics) {
+        return;
+    }
+
+
+    const report =
+        getSummaryText();
+
+
+    document.getElementById(
+        "reportPreview"
+    ).innerHTML = `
+
+        <div class="report-line">
+            <strong>${report.totalCampaigns}</strong>
+            total campaigns
+        </div>
+
+        <div class="report-line">
+            <strong>${report.launchedCampaigns}</strong>
+            campaigns launched
+        </div>
+
+        <div class="report-line">
+            <strong>${report.emailsSent}</strong>
+            emails sent
+        </div>
+
+        <div class="report-line">
+            <strong>${report.openRate}%</strong>
+            overall open rate
+        </div>
+
+        <div class="report-line">
+            <strong>${report.surveysCompleted}</strong>
+            completed surveys
+        </div>
+
+        <div class="report-line mt-3">
+            Best campaign:
+            <strong>${escapeHtml(
+                report.bestCampaign
+            )}</strong>
+        </div>
+
+    `;
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+document
+    .getElementById(
+        "openExportCenter"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            updateReportPreview();
+
+            document
+                .getElementById(
+                    "exportModal"
+                )
+                .classList.add(
+                    "active"
+                );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "closeExportCenter"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            document
+                .getElementById(
+                    "exportModal"
+                )
+                .classList.remove(
+                    "active"
+                );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "exportExcel"
+    )
+    .addEventListener(
+        "click",
+        exportExcel
+    );
+
+
+document
+    .getElementById(
+        "exportCsv"
+    )
+    .addEventListener(
+        "click",
+        exportCsv
+    );
+
+
+document
+    .getElementById(
+        "exportPrint"
+    )
+    .addEventListener(
+        "click",
+        exportPrintReport
+    );
+
+
+document
+    .getElementById(
+        "exportSummary"
+    )
+    .addEventListener(
+        "click",
+        exportWrittenSummary
+    );
+
+
+document
+    .getElementById(
+        "exportModal"
+    )
+    .addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target.id ===
+                "exportModal"
+            ) {
+
+                event.currentTarget
+                    .classList.remove(
+                        "active"
+                    );
+
+            }
+
+        }
+    );
+
+
+loadStatistics();
+
+</script>
+
+</body>
+</html>

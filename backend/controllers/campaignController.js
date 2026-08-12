@@ -1,5 +1,6 @@
 
 const pool = require("../config/db");
+const crypto = require("crypto");
 const { sendCampaignEmail } = require("../services/emailService");
 
 const getCampaigns = async (req, res) => {
@@ -212,6 +213,7 @@ const deleteCampaign = async (req, res) => {
     }
 };
 
+
 const launchCampaign = async (req, res) => {
     try {
 
@@ -265,39 +267,134 @@ const launchCampaign = async (req, res) => {
             recipientParams
         );
 
-        const recipients = recipientsResult.rows;
+        const recipients =
+            recipientsResult.rows;
 
         if (recipients.length === 0) {
             return res.status(400).json({
-                message: "No recipients match this campaign.",
+                message:
+                    "No recipients match this campaign.",
                 criteria
             });
         }
 
         if (!campaign.email_subject) {
             return res.status(400).json({
-                message: "Campaign email subject is missing."
+                message:
+                    "Campaign email subject is missing."
             });
         }
 
         if (!campaign.email_template) {
             return res.status(400).json({
-                message: "Campaign email template is missing."
+                message:
+                    "Campaign email template is missing."
             });
         }
 
         let sent = 0;
         let failed = 0;
+
         const failedRecipients = [];
 
         for (const recipient of recipients) {
 
+            const uniqueToken =
+                crypto.randomBytes(32).toString("hex");
+
+            const recipientResult =
+                await pool.query(
+                    `
+                    INSERT INTO campaign_recipients
+                    (
+                        campaign_id,
+                        recipient_id,
+                        unique_token,
+                        email_sent,
+                        email_sent_at
+                    )
+                    VALUES
+                    ($1,$2,$3,false,NULL)
+                    ON CONFLICT (
+                        campaign_id,
+                        recipient_id
+                    )
+                    DO UPDATE SET
+                        unique_token = EXCLUDED.unique_token,
+                        email_sent = false,
+                        email_sent_at = NULL,
+                        email_opened = false,
+                        email_opened_at = NULL,
+                        survey_completed = false,
+                        survey_completed_at = NULL
+                    RETURNING *
+                    `,
+                    [
+                        campaign.id,
+                        recipient.id,
+                        uniqueToken
+                    ]
+                );
+
+            const campaignRecipient =
+                recipientResult.rows[0];
+
             try {
+
+                const baseUrl =
+                    process.env.APP_URL ||
+                    `http://localhost:${process.env.PORT}`;
+
+                const surveyUrl =
+                    `${baseUrl}/survey.html?token=${uniqueToken}`;
+
+                const trackingUrl =
+                    `${baseUrl}/api/campaigns/track/open/${uniqueToken}`;
+
+                const emailHtml = `
+                    ${campaign.email_template}
+
+                    <div style="margin-top:30px;text-align:center;">
+                        <a
+                            href="${surveyUrl}"
+                            style="
+                                display:inline-block;
+                                padding:12px 24px;
+                                background:#e30613;
+                                color:#ffffff;
+                                text-decoration:none;
+                                border-radius:6px;
+                                font-family:Arial,sans-serif;
+                            "
+                        >
+                            Complete the questionnaire
+                        </a>
+                    </div>
+
+                    <img
+                        src="${trackingUrl}"
+                        width="1"
+                        height="1"
+                        style="display:none;"
+                        alt=""
+                    >
+                `;
 
                 await sendCampaignEmail(
                     recipient.email,
                     campaign.email_subject,
-                    campaign.email_template
+                    emailHtml
+                );
+
+                await pool.query(
+                    `
+                    UPDATE campaign_recipients
+                    SET
+                        email_sent = true,
+                        email_sent_at = NOW()
+                    WHERE id = $1
+                    `,
+                    [campaignRecipient.id]
                 );
 
                 sent++;
@@ -319,10 +416,22 @@ const launchCampaign = async (req, res) => {
                     `Failed to send to ${recipient.email}:`,
                     emailError
                 );
+
+                await pool.query(
+                    `
+                    UPDATE campaign_recipients
+                    SET
+                        email_sent = false,
+                        email_sent_at = NULL
+                    WHERE id = $1
+                    `,
+                    [campaignRecipient.id]
+                );
             }
         }
 
         if (sent > 0) {
+
             await pool.query(
                 `
                 UPDATE campaigns
@@ -347,24 +456,76 @@ const launchCampaign = async (req, res) => {
         );
 
         res.json({
-            message: "Campaign launch completed.",
-            campaign_id: campaign.id,
-            campaign_title: campaign.title,
+            message:
+                "Campaign launch completed.",
+            campaign_id:
+                campaign.id,
+            campaign_title:
+                campaign.title,
             criteria,
-            total_recipients: recipients.length,
+            total_recipients:
+                recipients.length,
             sent,
             failed,
-            failed_recipients: failedRecipients
+            failed_recipients:
+                failedRecipients
         });
 
     } catch (err) {
 
-        console.error("LAUNCH CAMPAIGN ERROR:", err);
+        console.error(
+            "LAUNCH CAMPAIGN ERROR:",
+            err
+        );
 
         res.status(500).json({
-            message: "Unable to launch campaign.",
-            error: err.message
+            message:
+                "Unable to launch campaign.",
+            error:
+                err.message
         });
+    }
+};
+
+const trackEmailOpen = async (req, res) => {
+
+    try {
+
+        const { token } = req.params;
+
+        await pool.query(
+            `
+            UPDATE campaign_recipients
+            SET
+                email_opened = true,
+                email_opened_at =
+                    COALESCE(email_opened_at, NOW())
+            WHERE unique_token = $1
+            `,
+            [token]
+        );
+
+        const pixel = Buffer.from(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+            "base64"
+        );
+
+        res.set({
+            "Content-Type": "image/png",
+            "Content-Length": pixel.length,
+            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate"
+        });
+
+        res.end(pixel);
+
+    } catch (err) {
+
+        console.error(
+            "TRACK EMAIL OPEN ERROR:",
+            err
+        );
+
+        res.status(500).end();
     }
 };
 
@@ -396,6 +557,7 @@ module.exports = {
     updateCampaign,
     deleteCampaign,
     launchCampaign,
+    trackEmailOpen,
     getNotifications
 };
 

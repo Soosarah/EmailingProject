@@ -9,7 +9,8 @@ const {
     createCampaign,
     updateCampaign,
     deleteCampaign,
-    launchCampaign
+    launchCampaign,
+    trackEmailOpen
 } = require("../controllers/campaignController");
 
 router.get(
@@ -42,4 +43,8 @@ router.post(
     launchCampaign
 );
 
+router.get(
+    "/track/open/:token",
+    trackEmailOpen
+);
 module.exports = router;

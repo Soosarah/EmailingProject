@@ -5,7 +5,8 @@ const authRoutes = require("./routes/authRoutes");
 const { findUserByEmail } = require("./models/userModel");
 const express = require("express");
 const cors = require("cors");
-const questionnaireRoutes = require("./routes/surveyRoutes");
+const statisticsRoutes = require("./routes/statisticsRoutes");
+
 require("dotenv").config();
 const logicRoutes =
 require("./routes/logicRoutes");
@@ -19,7 +20,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use("/api/auth", authRoutes);
 app.use("/api/campaigns", campaignRoutes);
 
-
+app.use("/api/statistics", statisticsRoutes);
 app.use("/api/logic",logicRoutes);
 
 const pool = require("./config/db");
