@@ -75,6 +75,21 @@
 .sidebar.collapsed .nav-item{justify-content:center;}
 
 .sidebar-bottom{margin-top:auto; padding-top:14px; border-top:1px solid rgba(255,255,255,.08);}
+.logout-btn{
+  display:flex; align-items:center; gap:13px;
+  width:100%;
+  color:var(--sidebar-text); background:transparent;
+  border:none; border-radius:10px; padding:11px 12px;
+  cursor:pointer; font-size:14px; font-weight:600;
+  font-family:inherit;
+  margin-bottom:6px;
+  text-align:left;
+  transition: background .15s ease, color .15s ease;
+}
+.logout-btn svg{width:18px; height:18px; flex-shrink:0; stroke:currentColor;}
+.logout-btn:hover{background:rgba(228,16,44,.12); color:var(--red);}
+.sidebar.collapsed .logout-btn{justify-content:center;}
+.sidebar.collapsed .logout-btn .label{display:none;}
 .collapse-btn{
   display:flex; align-items:center; justify-content:center; gap:8px;
   color:var(--sidebar-text); background:rgba(255,255,255,.05);

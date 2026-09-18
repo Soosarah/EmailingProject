@@ -52,13 +52,18 @@ async function getResponsesLast7Days() {
 
     const query = `
         SELECT
-            DATE(survey_completed_at) AS day,
-            COUNT(*) AS total
-        FROM campaign_recipients
-        WHERE survey_completed_at IS NOT NULL
-          AND survey_completed_at >= CURRENT_DATE - INTERVAL '6 days'
-        GROUP BY DATE(survey_completed_at)
-        ORDER BY day;
+            d::date AS day,
+            COUNT(cr.id)::integer AS total
+        FROM generate_series(
+            CURRENT_DATE - INTERVAL '6 days',
+            CURRENT_DATE,
+            INTERVAL '1 day'
+        ) AS d
+        LEFT JOIN campaign_recipients cr
+            ON cr.survey_completed_at IS NOT NULL
+            AND cr.survey_completed_at::date = d::date
+        GROUP BY d
+        ORDER BY d;
     `;
 
     const result = await pool.query(query);

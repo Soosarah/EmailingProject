@@ -48,7 +48,7 @@ const sidebarHTML = `
 
             <span class="label">Campagnes</span>
 
-            <span class="badge">6</span>
+            <span class="badge" id="campaignsBadge">…</span>
         </a>
 
 
@@ -302,6 +302,68 @@ function hasPermission(permissionLabel) {
     });
 
 }
+// ==========================================
+// BADGE CAMPAGNES (dynamique)
+// ==========================================
+
+const SIDEBAR_API_URL = "http://localhost:5000/api";
+
+async function updateCampaignsBadge() {
+
+    const badge =
+        document.getElementById("campaignsBadge");
+
+    if (!badge) {
+        return;
+    }
+
+    const token =
+        localStorage.getItem("token");
+
+    if (!token) {
+        badge.remove();
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `${SIDEBAR_API_URL}/campaigns`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Impossible de charger le nombre de campagnes"
+            );
+        }
+
+        const campaigns =
+            await response.json();
+
+        badge.textContent =
+            campaigns.length;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Badge campagnes :",
+            error
+        );
+
+        badge.remove();
+
+    }
+
+}
+
+
 function applyPermissions() {
 
     const user = JSON.parse(
@@ -557,6 +619,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Appliquer les permissions de l'utilisateur
 applyPermissions();
 checkCurrentPagePermission();
+updateCampaignsBadge();
 // ==========================================
 // COLLAPSE
 // ==========================================

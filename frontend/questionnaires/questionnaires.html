@@ -123,6 +123,20 @@
 
                     </div>
 
+                    <div class="form-group" style="margin-bottom:0; min-width:220px;">
+
+                        <label for="campaignFilter">
+                            Filtrer par campagne
+                        </label>
+
+                        <select id="campaignFilter">
+                            <option value="">
+                                Toutes les campagnes
+                            </option>
+                        </select>
+
+                    </div>
+
                 </div>
 
 
@@ -643,36 +657,61 @@
                             </div>
 
 
+<!-- Logic -->
 
-                            <!-- Logic -->
+<div
+    class="logic-section"
+    id="logicSection"
+>
 
-                            <div class="logic-section">
+    <div class="logic-title">
+        Navigation conditionnelle
+    </div>
 
-                                <div class="logic-title">
-
-                                    Navigation conditionnelle
-
-                                </div>
-
-                                <p>
-
-                                    Nous allons utiliser cette section
-                                    pour définir vers quelle page
-                                    le client sera envoyé selon
-                                    sa réponse.
-
-                                </p>
+    <p id="logicDescription">
+        Cette question peut déterminer
+        vers quelle page le client sera envoyé
+        après sa réponse.
+    </p>
 
 
-                                <div class="coming-soon">
+    <!-- Question déterminative -->
 
-                                    Logique conditionnelle —
-                                    prochaine étape
+    <label class="checkbox-row">
 
-                                </div>
+        <input
+            type="checkbox"
+            id="questionDeterminative"
+        >
 
-                            </div>
+        <span>
+            Utiliser cette question pour déterminer
+            la prochaine page
+        </span>
 
+    </label>
+
+
+    <!-- Branching -->
+
+    <div
+        id="branchingEditor"
+        class="branching-editor hidden"
+    >
+
+        <div class="branching-title">
+            Parcours selon la réponse
+        </div>
+
+        <div
+            id="branchingList"
+            class="branching-list"
+        ></div>
+
+    </div>
+
+</div>
+                          
 
 
                         </div>
@@ -690,6 +729,34 @@
 
 </div>
 
+
+
+<!-- =====================================================
+     PREVIEW MODAL
+     ===================================================== -->
+
+<div class="overlay" id="previewOverlay"></div>
+
+<div class="modal" id="previewModal">
+
+    <div class="modal-head">
+
+        <div>
+            <span class="eyebrow" id="previewCampaign">—</span>
+            <h2 id="previewTitle">—</h2>
+        </div>
+
+        <button class="drawer-close" id="closePreview" aria-label="Fermer">
+            ✕
+        </button>
+
+    </div>
+
+    <div class="modal-body" id="previewBody">
+        <!-- rempli dynamiquement -->
+    </div>
+
+</div>
 
 
 <!-- =====================================================
