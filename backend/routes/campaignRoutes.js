@@ -1,8 +1,8 @@
-
 const express = require("express");
 const router = express.Router();
 
-const authenticateToken = require("../middleware/authMiddleware");
+const authenticateToken = require("../middleware/authmiddleware");
+const upload = require("../middleware/uploadMiddleware");
 
 const {
     getCampaigns,
@@ -10,8 +10,16 @@ const {
     updateCampaign,
     deleteCampaign,
     launchCampaign,
-    trackEmailOpen
+    importRecipients,
+    getCampaignProgress,
+    pauseCampaign,
+    resumeCampaign
 } = require("../controllers/campaignController");
+
+
+// ===============================
+// CAMPAIGNS
+// ===============================
 
 router.get(
     "/",
@@ -37,14 +45,56 @@ router.delete(
     deleteCampaign
 );
 
+
+// ===============================
+// CAMPAIGN PROGRESS
+// ===============================
+
+router.get(
+    "/:id/progress",
+    authenticateToken,
+    getCampaignProgress
+);
+
+
+// ===============================
+// PAUSE / RESUME
+// ===============================
+
+router.post(
+    "/:id/pause",
+    authenticateToken,
+    pauseCampaign
+);
+
+router.post(
+    "/:id/resume",
+    authenticateToken,
+    resumeCampaign
+);
+
+
+// ===============================
+// IMPORT RECIPIENTS
+// ===============================
+
+router.post(
+    "/:id/import-recipients",
+    authenticateToken,
+    upload.single("file"),
+    importRecipients
+);
+
+
+// ===============================
+// LAUNCH CAMPAIGN
+// ===============================
+
 router.post(
     "/:id/launch",
     authenticateToken,
     launchCampaign
 );
 
-router.get(
-    "/track/open/:token",
-    trackEmailOpen
-);
+
 module.exports = router;
