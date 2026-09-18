@@ -648,6 +648,28 @@ td small {
     background: var(--ws-slate);
 }
 
+<<<<<<< HEAD:frontend/campaigns/campaigns.html
+=======
+/* Cadence-related lifecycle states reuse the same pill look */
+.pill--sending {
+    background: var(--ws-green-bg);
+    color: var(--ws-green);
+}
+
+.pill--sending::before {
+    background: var(--ws-green);
+}
+
+.pill--paused {
+    background: var(--ws-amber-bg);
+    color: var(--ws-amber);
+}
+
+.pill--paused::before {
+    background: var(--ws-amber);
+}
+
+>>>>>>> origin/master:public/campaigns.html
 /* =========================
    ACTIONS
 ========================= */
@@ -949,6 +971,66 @@ td small {
     gap: 16px;
 }
 
+<<<<<<< HEAD:frontend/campaigns/campaigns.html
+=======
+/* Progress bar used in the drawer for sending/paused campaigns */
+.progress-track {
+    width: 100%;
+    height: 10px;
+    border-radius: 6px;
+    background: var(--ws-gray-bg);
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--red);
+    border-radius: 6px;
+    transition: width .3s ease;
+}
+
+.btn-pause-resume {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    border: none;
+    border-radius: 10px;
+
+    padding: 11px 16px;
+
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 13.5px;
+
+    cursor: pointer;
+
+    transition: .15s ease;
+}
+
+.btn-pause-resume.pause {
+    background: var(--ws-amber-bg);
+    color: var(--ws-amber);
+}
+
+.btn-pause-resume.pause:hover {
+    background: var(--ws-amber);
+    color: white;
+}
+
+.btn-pause-resume.resume {
+    background: var(--ws-green-bg);
+    color: var(--ws-green);
+}
+
+.btn-pause-resume.resume:hover {
+    background: var(--ws-green);
+    color: white;
+}
+
+>>>>>>> origin/master:public/campaigns.html
 /* =========================
    EMAIL PREVIEW
 ========================= */
@@ -1097,6 +1179,54 @@ td small {
     resize: vertical;
 }
 
+<<<<<<< HEAD:frontend/campaigns/campaigns.html
+=======
+.modal-hint {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ws-text-dim);
+    padding: 0 26px 14px;
+}
+
+.csv-dropzone {
+    border: 1.5px dashed var(--ws-border);
+    border-radius: 12px;
+    padding: 16px;
+    background: var(--ws-bg);
+}
+
+.csv-dropzone input[type="file"] {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ws-text-dim);
+}
+
+.csv-dropzone input[type="file"]::file-selector-button {
+    border: none;
+    background: var(--ink);
+    color: white;
+
+    padding: 8px 14px;
+    border-radius: 8px;
+
+    font-weight: 600;
+    font-size: 12.5px;
+
+    margin-right: 10px;
+
+    cursor: pointer;
+    transition: .15s ease;
+}
+
+.csv-dropzone input[type="file"]::file-selector-button:hover {
+    background: var(--red);
+}
+
+.csv-dropzone small {
+    color: var(--ws-text-dim) !important;
+}
+
+>>>>>>> origin/master:public/campaigns.html
 .modal-foot {
     display: flex;
     justify-content: flex-end;
@@ -1140,6 +1270,175 @@ td small {
     cursor: pointer;
 }
 
+<<<<<<< HEAD:frontend/campaigns/campaigns.html
+=======
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    max-width: 360px;
+}
+
+.toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    background: white;
+    border: 1px solid var(--ws-border);
+    border-left: 4px solid var(--ws-gray);
+    border-radius: 12px;
+
+    padding: 14px 16px;
+
+    box-shadow: 0 12px 30px rgba(20,21,26,.14);
+
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: var(--ws-text);
+    line-height: 1.5;
+
+    transform: translateX(24px);
+    opacity: 0;
+    transition: transform .22s ease, opacity .22s ease;
+}
+
+.toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.toast--success { border-left-color: var(--ws-green); }
+.toast--success i:first-child { color: var(--ws-green); }
+
+.toast--error { border-left-color: var(--red); }
+.toast--error i:first-child { color: var(--red); }
+
+.toast--info i:first-child { color: var(--ws-blue); }
+
+.toast-message {
+    flex: 1;
+}
+
+.toast-close {
+    border: none;
+    background: transparent;
+    color: var(--ws-text-dim);
+    cursor: pointer;
+    padding: 2px;
+    flex-shrink: 0;
+}
+
+.toast-close:hover {
+    color: var(--ws-text);
+}
+
+.segmented-control {
+    display: flex;
+    gap: 8px;
+}
+
+.segment {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    border: 1.5px solid var(--ws-border);
+    background: var(--ws-bg);
+    color: var(--ws-text-dim);
+
+    border-radius: 10px;
+    padding: 11px 14px;
+
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: .15s ease;
+}
+
+.segment:hover {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+.segment.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: white;
+}
+
+/* Cadence estimate box */
+.cadence-estimate {
+    margin-top: 12px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--ws-text-dim);
+    background: var(--ws-bg);
+    border: 1px solid var(--ws-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.cadence-estimate strong {
+    color: var(--ws-text);
+}
+
+.cadence-inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cadence-inline span {
+    font-size: 13px;
+    color: var(--ws-text-dim);
+}
+
+.cadence-amount-input {
+    width: 80px;
+    border: 1px solid var(--ws-border);
+    border-radius: 10px;
+    padding: 9px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    background: var(--ws-bg);
+    color: var(--ws-text);
+    outline: none;
+}
+
+.cadence-amount-input:focus {
+    border-color: var(--red);
+    background: white;
+}
+
+.cadence-unit-select {
+    border: 1px solid var(--ws-border);
+    border-radius: 10px;
+    padding: 9px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    background: var(--ws-bg);
+    color: var(--ws-text);
+    outline: none;
+}
+
+.cadence-unit-select:focus {
+    border-color: var(--red);
+    background: white;
+}
+
+>>>>>>> origin/master:public/campaigns.html
 /* =========================
    RESPONSIVE
 ========================= */
@@ -1421,6 +1720,40 @@ td small {
       </div>
     </div>
 
+    <!--
+      CADENCE / PROGRESS SECTION
+      Shown for campaigns that are queued, sending, paused or
+      completed. Hidden entirely for draft campaigns, since there is
+      nothing to show yet. Populated and refreshed by
+      refreshDrawerProgress() below, which polls
+      GET /api/campaigns/:id/progress while the drawer is open and
+      the campaign is actively sending.
+    -->
+    <div class="drawer-section" id="drawerCadenceSection" style="display:none;">
+      <h4>Cadence &amp; progression</h4>
+
+      <div class="drawer-chip" style="margin-bottom:12px;">
+        <i class="fa-solid fa-gauge-high"></i>
+        <span id="drawerCadenceLabel">—</span>
+      </div>
+
+      <div class="progress-track" style="margin-bottom:8px;">
+        <div class="progress-fill" id="drawerProgressFill" style="width:0%;"></div>
+      </div>
+
+      <div class="drawer-grid-2" style="margin-bottom:14px;">
+        <div><span class="d-lbl">Envoyés</span><p id="drawerSentCount">0</p></div>
+        <div><span class="d-lbl">Échecs</span><p id="drawerFailedCount">0</p></div>
+        <div><span class="d-lbl">Restants</span><p id="drawerRemainingCount">0</p></div>
+        <div><span class="d-lbl">Progression</span><p id="drawerPercent">0%</p></div>
+      </div>
+
+      <button id="drawerPauseResumeBtn" class="btn-pause-resume pause" style="display:none;">
+        <i class="fa-solid fa-pause"></i>
+        <span>Suspendre la campagne</span>
+      </button>
+    </div>
+
     <div class="drawer-section">
       <h4>Survey attached</h4>
       <div class="drawer-chip"><i class="fa-solid fa-file-lines"></i> <span id="drawerSurvey">—</span></div>
@@ -1488,12 +1821,93 @@ td small {
 </select>
       </div>
 
-      <div class="form-field span-2">
-        <label>Recipients</label>
-        <select id="f-recipients">
-       <option value="all">All Customers</option>
+     <div class="form-field span-2">
+    <label>Recipients</label>
+
+    <div class="segmented-control" id="recipientToggle">
+        <button type="button" class="segment active" data-value="all">
+            <i class="fa-solid fa-users"></i> All Customers
+        </button>
+        <button type="button" class="segment" data-value="csv">
+            <i class="fa-solid fa-file-csv"></i> Import from CSV
+        </button>
+    </div>
+
+    <select id="f-recipients" style="display:none;">
+        <option value="all">All Customers</option>
+        <option value="csv">Import from CSV</option>
+    </select>
+
+    <div id="csvUploadContainer" class="csv-dropzone" style="display: none; margin-top: 12px;">
+        <label for="csvFile">CSV File</label>
+
+        <input
+            type="file"
+            id="csvFile"
+            accept=".csv"
+        />
+
+        <small style="display:block; margin-top:6px;">
+            Upload a CSV file containing an <strong>email</strong> column.
+        </small>
+    </div>
+</div>
+
+    <!--
+      CADENCE DES EMAILS
+      Lets a non-technical user pick how fast emails go out, without
+      touching any code. Mirrors the "Recipients" segmented-control
+      pattern above: a visible segmented toggle drives a hidden
+      <select id="f-cadence-mode"> which stays the single source of
+      truth read by createCampaign()/editCampaign().
+    -->
+    <div class="form-field span-2">
+        <label>Cadence des emails</label>
+
+        <div class="segmented-control" id="cadenceToggle">
+            <button type="button" class="segment active" data-value="immediate">
+                <i class="fa-solid fa-bolt"></i> Envoi immédiat
+            </button>
+            <button type="button" class="segment" data-value="controlled">
+                <i class="fa-solid fa-gauge-high"></i> Envoi contrôlé
+            </button>
+        </div>
+
+        <select id="f-cadence-mode" style="display:none;">
+            <option value="immediate">Envoi immédiat</option>
+            <option value="controlled">Envoi contrôlé</option>
         </select>
-      </div>
+
+        <div id="cadenceControlledOptions" style="display:none; margin-top:12px;">
+
+            <div class="cadence-inline">
+                <span>Envoyer</span>
+
+                <input
+                    type="number"
+                    id="f-cadence-amount"
+                    class="cadence-amount-input"
+                    min="1"
+                    step="1"
+                    value="10"
+                >
+
+                <span>emails par</span>
+
+                <select id="f-cadence-unit" class="cadence-unit-select">
+                    <option value="second">seconde</option>
+                    <option value="minute" selected>minute</option>
+                    <option value="hour">heure</option>
+                    <option value="day">jour</option>
+                </select>
+            </div>
+
+            <div class="cadence-estimate">
+                <i class="fa-solid fa-clock"></i>
+                <span id="cadenceEstimateText">Sélectionnez des destinataires pour estimer la durée d'envoi.</span>
+            </div>
+        </div>
+    </div>
 
       <div class="form-field">
         <label>Start date</label>
@@ -1504,25 +1918,69 @@ td small {
         <label>End date</label>
         <input type="date" id="f-end">
       </div>
-
-      <div class="form-field">
-        <label>Status</label>
-        <select id="f-status">
-          <option value="draft">Draft</option>
-          <option value="scheduled">Scheduled</option>
-        </select>
-      </div>
     </div>
   </div>
+
+  <p class="modal-hint">
+    <strong>Save Draft</strong> keeps this campaign for later without sending anything.
+    <strong>Schedule Campaign</strong> saves it and sends it immediately to the selected recipients.
+  </p>
 
   <div class="modal-foot">
     <button class="btn-ghost" id="cancelModal">Cancel</button>
     <button class="btn-secondary" id="saveDraft">Save Draft</button>
-    <button class="btn-new-campaign" id="scheduleCampaign"  onclick="createCampaign('sent')" >Schedule Campaign</button>
+  <button class="btn-new-campaign" id="scheduleCampaign" onclick="createCampaign('sent')">Launch Campaign</button>
   </div>
 </div>
 
 <script>
+
+/*
+   Non-blocking toast notifications, replacing the browser's alert()
+   for in-app feedback (form validation, save/send results, errors).
+   Purely a presentation change — every call site still runs the same
+   logic (return/continue) it did before; only how the message is
+   shown to the user is different.
+*/
+function showToast(message, type = "info", duration = 4500) {
+
+    const container = document.getElementById("toastContainer");
+
+    if (!container) {
+        window.alert(message);
+        return;
+    }
+
+    const toast = document.createElement("div");
+    toast.className = `toast toast--${type}`;
+
+    const icon =
+        type === "success" ? "fa-circle-check" :
+        type === "error"   ? "fa-circle-exclamation" :
+                              "fa-circle-info";
+
+    toast.innerHTML = `
+        <i class="fa-solid ${icon}"></i>
+        <div class="toast-message">${String(message).replace(/\n/g, "<br>")}</div>
+        <button class="toast-close" aria-label="Dismiss">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    `;
+
+    container.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add("show"));
+
+    const remove = () => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 220);
+    };
+
+    toast.querySelector(".toast-close").addEventListener("click", remove);
+
+    setTimeout(remove, duration);
+}
+
   let notifications = [
 
     {
@@ -1637,49 +2095,393 @@ async function loadCampaigns() {
 
 loadCampaigns();
 
+const recipientSelect = document.getElementById("f-recipients");
+const csvUploadContainer = document.getElementById("csvUploadContainer");
+
+recipientSelect.addEventListener("change", () => {
+
+    if (recipientSelect.value === "csv") {
+        csvUploadContainer.style.display = "block";
+    } else {
+        csvUploadContainer.style.display = "none";
+        document.getElementById("csvFile").value = "";
+    }
+
+});
+
+/*
+   The visible "Recipients" control is now a segmented toggle rather
+   than the raw <select>. The <select> is kept in the DOM (hidden) as
+   the single source of truth so every existing read of
+   f-recipients.value (in createCampaign, etc.) keeps working
+   unchanged — clicking a segment just updates the hidden select and
+   fires its existing 'change' listener above.
+*/
+document.querySelectorAll("#recipientToggle .segment").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        document
+            .querySelectorAll("#recipientToggle .segment")
+            .forEach(b => b.classList.remove("active"));
+
+        button.classList.add("active");
+
+        recipientSelect.value = button.dataset.value;
+
+        recipientSelect.dispatchEvent(new Event("change"));
+
+    });
+
+});
+
+/* =========================
+   CADENCE DES EMAILS
+   ----------------------
+   Same pattern as the Recipients toggle above: a visible segmented
+   control drives a hidden <select id="f-cadence-mode">, which is
+   what createCampaign()/editCampaign() actually read from. This
+   lets a non-technical marketing user configure sending speed
+   (immediate vs. controlled, and if controlled, how many emails per
+   second/minute/hour/day) entirely through buttons and a couple of
+   simple fields — no code, no API calls, no JSON.
+========================= */
+
+const cadenceModeSelect = document.getElementById("f-cadence-mode");
+const cadenceControlledOptions = document.getElementById("cadenceControlledOptions");
+const cadenceAmountInput = document.getElementById("f-cadence-amount");
+const cadenceUnitSelect = document.getElementById("f-cadence-unit");
+const cadenceEstimateText = document.getElementById("cadenceEstimateText");
+
+const UNIT_LABEL_FR = {
+    second: "seconde",
+    minute: "minute",
+    hour: "heure",
+    day: "jour"
+};
+
+const UNIT_TO_SECONDS = {
+    second: 1,
+    minute: 60,
+    hour: 3600,
+    day: 86400
+};
+
+document.querySelectorAll("#cadenceToggle .segment").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        document
+            .querySelectorAll("#cadenceToggle .segment")
+            .forEach(b => b.classList.remove("active"));
+
+        button.classList.add("active");
+
+        cadenceModeSelect.value = button.dataset.value;
+
+        cadenceControlledOptions.style.display =
+            button.dataset.value === "controlled" ? "block" : "none";
+
+        updateCadenceEstimate();
+
+    });
+
+});
+
+cadenceAmountInput.addEventListener("input", updateCadenceEstimate);
+cadenceUnitSelect.addEventListener("change", updateCadenceEstimate);
+
+// Recalculate the estimate whenever the recipient source changes,
+// since the estimated duration depends on how many people are
+// targeted.
+recipientSelect.addEventListener("change", updateCadenceEstimate);
+
+document.getElementById("csvFile").addEventListener("change", () => {
+    countCsvRows().then(updateCadenceEstimate);
+});
+
+let lastKnownCsvRowCount = null;
+
+function countCsvRows() {
+
+    const file = document.getElementById("csvFile").files[0];
+
+    if (!file) {
+        lastKnownCsvRowCount = null;
+        return Promise.resolve();
+    }
+
+    return file.text().then(text => {
+
+        const lines = text
+            .split(/\r\n|\n/)
+            .map(l => l.trim())
+            .filter(l => l.length > 0);
+
+        // Subtract 1 for the header row, floor at 0.
+        lastKnownCsvRowCount = Math.max(lines.length - 1, 0);
+
+    }).catch(() => {
+        lastKnownCsvRowCount = null;
+    });
+}
+
+function formatDuration(totalSeconds) {
+
+    if (totalSeconds < 60) {
+        return `${Math.round(totalSeconds)} seconde(s)`;
+    }
+
+    if (totalSeconds < 3600) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = Math.round(totalSeconds % 60);
+        return seconds > 0 ? `${minutes} min ${seconds} s` : `${minutes} min`;
+    }
+
+    if (totalSeconds < 86400) {
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.round((totalSeconds % 3600) / 60);
+        return minutes > 0 ? `${hours} h ${minutes} min` : `${hours} h`;
+    }
+
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.round((totalSeconds % 86400) / 3600);
+    return hours > 0 ? `${days} j ${hours} h` : `${days} j`;
+}
+
+function updateCadenceEstimate() {
+
+    if (cadenceModeSelect.value !== "controlled") return;
+
+    const amount = parseInt(cadenceAmountInput.value, 10);
+    const unit = cadenceUnitSelect.value;
+
+    if (!amount || amount <= 0) {
+        cadenceEstimateText.textContent =
+            "Entrez un nombre d'emails valide pour estimer la durée d'envoi.";
+        return;
+    }
+
+    const recipientType = recipientSelect.value;
+
+    if (recipientType === "csv") {
+
+        if (lastKnownCsvRowCount === null) {
+            cadenceEstimateText.textContent =
+                "Sélectionnez un fichier CSV pour estimer la durée d'envoi.";
+            return;
+        }
+
+        const totalSeconds =
+            (lastKnownCsvRowCount / amount) * UNIT_TO_SECONDS[unit];
+
+        cadenceEstimateText.innerHTML =
+            `<strong>${lastKnownCsvRowCount}</strong> destinataire(s) détecté(s) dans le CSV — ` +
+            `à raison de <strong>${amount} email(s) / ${UNIT_LABEL_FR[unit]}</strong>, ` +
+            `durée estimée : <strong>${formatDuration(totalSeconds)}</strong>.`;
+
+    } else {
+
+        cadenceEstimateText.textContent =
+            `Envoi à tous les clients, à raison de ${amount} email(s) / ${UNIT_LABEL_FR[unit]}. ` +
+            `Le nombre exact de destinataires et la durée précise seront connus au lancement.`;
+    }
+}
 
 document.getElementById("saveDraft").addEventListener("click", () => {
     createCampaign("draft");
 });
 
-document.getElementById("scheduleCampaign").addEventListener("click", () => {
-    createCampaign("scheduled");
-});
+/*
+   FIX #2: This listener used to ALSO fire on the Schedule Campaign
+   button, in addition to its inline onclick="createCampaign('sent')".
+   That meant every click created TWO campaigns (one 'sent', one
+   'scheduled'). Removed — the inline onclick on the button is the
+   single source of truth for that click now.
+*/
+
+
+/*
+   EMAIL TEMPLATE BUILDER
+   ----------------------
+   The "Email template" dropdown only offered a style NAME
+   (e.g. "Promotional — Red Banner"); that label was being sent
+   straight to Nodemailer as the email's HTML body, so sent emails
+   had no real content and no branding. These helpers turn the
+   selected style + the campaign's own subject/description into an
+   actual HTML email with a Djezzy banner at the top.
+
+   A hidden HTML comment tag (DJEZZY_TEMPLATE:...) is stored at the
+   top of the generated HTML purely so editCampaign() can figure out
+   which style was originally selected and restore the dropdown —
+   it is invisible in the sent email.
+*/
+
+function djezzyEmailBanner() {
+
+    return `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#E4102C;">
+      <tr>
+        <td style="padding:36px 32px 30px;text-align:center;">
+          <div style="font-family:Arial,Helvetica,sans-serif;font-weight:800;font-size:30px;letter-spacing:3px;color:#ffffff;">
+            DJEZZY
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="background:#9C0A1E;height:6px;line-height:6px;font-size:0;">&nbsp;</td>
+      </tr>
+    </table>
+    `;
+}
+
+function buildCampaignEmailHtml(templateChoice, subject, description) {
+
+    const safeSubject = subject || "";
+    const safeDescription = (description || "").replace(/\n/g, "<br>");
+
+    const banner = djezzyEmailBanner();
+
+    let body;
+
+    if (templateChoice === "Newsletter — Minimal") {
+
+        body = `
+        <div style="padding:32px 28px;font-family:Arial,Helvetica,sans-serif;color:#14151A;">
+            <h2 style="margin:0 0 14px;font-size:20px;">${safeSubject}</h2>
+            <p style="font-size:14px;line-height:1.6;color:#4B5563;">${safeDescription}</p>
+        </div>
+        `;
+
+    } else if (templateChoice === "Survey Invitation") {
+
+        body = `
+        <div style="padding:32px 28px;font-family:Arial,Helvetica,sans-serif;color:#14151A;text-align:center;">
+            <h2 style="margin:0 0 14px;font-size:20px;">${safeSubject}</h2>
+            <p style="font-size:14px;line-height:1.6;color:#4B5563;margin-bottom:24px;">${safeDescription}</p>
+            <span style="display:inline-block;background:#E4102C;color:#ffffff;font-weight:600;padding:12px 26px;border-radius:8px;font-size:14px;">
+                Give us your feedback
+            </span>
+        </div>
+        `;
+
+    } else if (templateChoice === "Plain Text") {
+
+        body = `
+        <div style="padding:28px;font-family:Arial,Helvetica,sans-serif;color:#14151A;">
+            <p style="font-size:14px;line-height:1.7;">${safeDescription || safeSubject}</p>
+        </div>
+        `;
+
+    } else {
+
+        // Default / "Promotional — Red Banner"
+        body = `
+        <div style="font-family:Arial,Helvetica,sans-serif;color:#14151A;">
+            <div style="background:#FDE4E8;padding:28px;text-align:center;">
+                <h1 style="margin:0;color:#9C0A1E;font-size:22px;">${safeSubject}</h1>
+            </div>
+            <div style="padding:26px 28px;">
+                <p style="font-size:14px;line-height:1.6;color:#4B5563;">${safeDescription}</p>
+            </div>
+        </div>
+        `;
+    }
+
+    return `<!--DJEZZY_TEMPLATE:${templateChoice}-->
+<div style="max-width:600px;margin:0 auto;background:#ffffff;">${banner}${body}</div>`;
+}
+
+function extractTemplateStyle(html) {
+
+    if (!html) return null;
+
+    const match = html.match(/<!--DJEZZY_TEMPLATE:(.*?)-->/);
+
+    return match ? match[1] : null;
+}
 
 
 async function createCampaign(forceStatus = null) {
+
+    const recipientType =
+        document.getElementById("f-recipients").value;
+
+    const csvFile =
+        document.getElementById("csvFile").files[0];
 
     const campaign = {
         title: document.getElementById("f-title").value.trim(),
         description: document.getElementById("f-description").value.trim(),
         email_subject: document.getElementById("f-subject").value.trim(),
-        email_template: document.getElementById("f-template").value,
+        email_template: buildCampaignEmailHtml(
+            document.getElementById("f-template").value,
+            document.getElementById("f-subject").value.trim(),
+            document.getElementById("f-description").value.trim()
+        ),
         start_date: document.getElementById("f-start").value,
         end_date: document.getElementById("f-end").value,
-        status: forceStatus,
-        recipient_criteria:
-    document.getElementById("f-recipients").value,
-
-questionnaire_id:
-    document.getElementById("f-survey").value || null
+        /*
+           FIX #1: Previously this was `status: forceStatus`, which meant
+           clicking "Schedule Campaign" created the row in Postgres with
+           status = 'sent' BEFORE anything was actually sent. That made
+           launchCampaign() immediately bail out with "This campaign has
+           already been sent." — before it ever queried recipients or
+           called sendCampaignEmail. Only the /launch endpoint should ever
+           set status to 'sent', on actual success.
+        */
+        status: forceStatus === "sent" ? "scheduled" : forceStatus,
+        recipient_criteria: recipientType,
+        questionnaire_id:
+            document.getElementById("f-survey").value || null,
+        // Cadence configuration — read from the hidden select which is
+        // kept in sync by the segmented toggle above.
+        cadence_mode: cadenceModeSelect.value,
+        cadence_amount:
+            cadenceModeSelect.value === "controlled"
+                ? parseInt(cadenceAmountInput.value, 10)
+                : null,
+        cadence_unit:
+            cadenceModeSelect.value === "controlled"
+                ? cadenceUnitSelect.value
+                : null
     };
 
     if (!campaign.title) {
-        alert("Please enter a campaign title.");
+        showToast("Please enter a campaign title.", "error");
         return;
     }
 
     if (!campaign.email_subject) {
-        alert("Please enter an email subject.");
+        showToast("Please enter an email subject.", "error");
         return;
     }
 
     if (!campaign.email_template) {
-        alert("Please enter an email template.");
+        showToast("Please enter an email template.", "error");
+        return;
+    }
+
+    // CSV is required when "Import from CSV" is selected
+    if (recipientType === "csv" && !csvFile) {
+        showToast("Please select a CSV file.", "error");
+        return;
+    }
+
+    // Cadence must have a valid amount when "controlled" is selected
+    if (
+        cadenceModeSelect.value === "controlled" &&
+        (!cadenceAmountInput.value || parseInt(cadenceAmountInput.value, 10) <= 0)
+    ) {
+        showToast("Veuillez indiquer un nombre d'emails valide pour la cadence.", "error");
         return;
     }
 
     try {
+
+        /* =========================
+           EDIT EXISTING CAMPAIGN
+        ========================= */
 
         if (editingCampaign) {
 
@@ -1699,15 +2501,16 @@ questionnaire_id:
 
                 const error = await response.json();
 
-                alert(
+                showToast(
                     error.message ||
-                    "Unable to update campaign."
+                    "Unable to update campaign.",
+                    "error"
                 );
 
                 return;
             }
 
-            alert("Campaign updated successfully!");
+            showToast("Campaign updated successfully!", "success");
 
             editingCampaign = null;
 
@@ -1717,6 +2520,11 @@ questionnaire_id:
 
             return;
         }
+
+
+        /* =========================
+           CREATE CAMPAIGN
+        ========================= */
 
         const createResponse = await fetch(
             `${API}/campaigns`,
@@ -1734,9 +2542,10 @@ questionnaire_id:
 
             const error = await createResponse.json();
 
-            alert(
+            showToast(
                 error.message ||
-                "Unable to create campaign."
+                "Unable to create campaign.",
+                "error"
             );
 
             return;
@@ -1744,6 +2553,63 @@ questionnaire_id:
 
         const createdCampaign =
             await createResponse.json();
+
+
+        /* =========================
+           IMPORT CSV
+        ========================= */
+
+        if (recipientType === "csv") {
+
+            const formData = new FormData();
+
+            formData.append("file", csvFile);
+
+            const importResponse = await fetch(
+                `${API}/campaigns/${createdCampaign.id}/import-recipients`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: formData
+                }
+            );
+
+            const importResult =
+                await importResponse.json();
+
+            if (!importResponse.ok) {
+
+                showToast(
+                    importResult.message ||
+                    "CSV import failed.",
+                    "error"
+                );
+
+                return;
+            }
+
+            console.log(
+                "CSV IMPORT RESULT:",
+                importResult
+            );
+
+            if (importResult.total_found === 0) {
+
+                showToast(
+                    "The CSV does not contain any valid email addresses.",
+                    "error"
+                );
+
+                return;
+            }
+        }
+
+
+        /* =========================
+           LAUNCH CAMPAIGN
+        ========================= */
 
         if (forceStatus === "sent") {
 
@@ -1762,26 +2628,34 @@ questionnaire_id:
 
             if (!launchResponse.ok) {
 
-                alert(
+                showToast(
                     launchResult.message ||
-                    "Campaign was created but could not be sent."
+                    "Campaign was created but could not be sent.",
+                    "error"
                 );
 
                 return;
             }
 
-            alert(
-                `Campaign sent successfully!\n\n` +
-                `Recipients: ${launchResult.total_recipients}\n` +
-                `Sent: ${launchResult.sent}\n` +
-                `Failed: ${launchResult.failed}`
+            /*
+               The backend now QUEUES the campaign for the cadence
+               worker instead of sending everything synchronously, so
+               it responds with total_recipients and a queued message
+               rather than final sent/failed counts. Live progress is
+               shown in the campaign drawer (see refreshDrawerProgress
+               below) instead of in this one-off toast.
+            */
+            showToast(
+                `Campagne mise en file d'attente !\n` +
+                `Destinataires : ${launchResult.total_recipients}`,
+                "success"
             );
 
         } else {
 
-            alert("Campaign created successfully!");
-
+            showToast("Campaign created successfully!", "success");
         }
+
 
         editingCampaign = null;
 
@@ -1789,14 +2663,18 @@ questionnaire_id:
 
         loadCampaigns();
 
+
     } catch (err) {
 
-        console.error("CAMPAIGN ERROR:", err);
-
-        alert(
-            "Server error. Check the backend console."
+        console.error(
+            "CAMPAIGN ERROR:",
+            err
         );
 
+        showToast(
+            "Server error. Check the backend console.",
+            "error"
+        );
     }
 }
 
@@ -1831,7 +2709,7 @@ async function confirmDeleteCampaign() {
 
             const error = await response.json();
 
-            alert(error.message);
+            showToast(error.message, "error");
 
             return;
 
@@ -1847,7 +2725,7 @@ async function confirmDeleteCampaign() {
 
         console.error(err);
 
-        alert("Server error");
+        showToast("Server error", "error");
 
     }
 
@@ -1989,6 +2867,31 @@ function openCreateCampaignModal() {
 
     loadQuestionnaires();
 
+    if (!editingCampaign) {
+
+        document.getElementById("f-recipients").value = "all";
+
+        document.querySelectorAll("#recipientToggle .segment").forEach(b => {
+            b.classList.toggle("active", b.dataset.value === "all");
+        });
+
+        document.getElementById("csvUploadContainer").style.display = "none";
+
+        // Reset cadence to its default ("immediate") every time a
+        // brand-new campaign form is opened, so leftover values from
+        // a previous edit never leak into a new campaign.
+        cadenceModeSelect.value = "immediate";
+
+        document.querySelectorAll("#cadenceToggle .segment").forEach(b => {
+            b.classList.toggle("active", b.dataset.value === "immediate");
+        });
+
+        cadenceControlledOptions.style.display = "none";
+        cadenceAmountInput.value = "10";
+        cadenceUnitSelect.value = "minute";
+        lastKnownCsvRowCount = null;
+    }
+
     modal.classList.add("open");
     overlay.classList.add("show");
 
@@ -2044,7 +2947,8 @@ async function editCampaign(id) {
             campaign.email_subject || "";
 
         document.getElementById("f-template").value =
-            campaign.email_template || "";
+            extractTemplateStyle(campaign.email_template) ||
+            document.getElementById("f-template").options[0].value;
 
         document.getElementById("f-start").value =
             campaign.start_date?.split("T")[0] || "";
@@ -2052,8 +2956,35 @@ async function editCampaign(id) {
         document.getElementById("f-end").value =
             campaign.end_date?.split("T")[0] || "";
 
-        document.getElementById("f-status").value =
-            campaign.status.toLowerCase();
+        const recipientValue = campaign.recipient_criteria || "all";
+
+        document.getElementById("f-recipients").value = recipientValue;
+
+        document.querySelectorAll("#recipientToggle .segment").forEach(b => {
+            b.classList.toggle("active", b.dataset.value === recipientValue);
+        });
+
+        document.getElementById("csvUploadContainer").style.display =
+            recipientValue === "csv" ? "block" : "none";
+
+        // Restore cadence configuration from the loaded campaign, so
+        // editing an existing controlled-sending campaign doesn't
+        // silently reset it to "immediate".
+        const cadenceModeValue = campaign.cadence_mode || "immediate";
+
+        cadenceModeSelect.value = cadenceModeValue;
+
+        document.querySelectorAll("#cadenceToggle .segment").forEach(b => {
+            b.classList.toggle("active", b.dataset.value === cadenceModeValue);
+        });
+
+        cadenceControlledOptions.style.display =
+            cadenceModeValue === "controlled" ? "block" : "none";
+
+        cadenceAmountInput.value = campaign.cadence_amount || 10;
+        cadenceUnitSelect.value = campaign.cadence_unit || "minute";
+
+        updateCadenceEstimate();
 
         document.querySelector(".modal-head h2").textContent =
             "Edit Campaign";
@@ -2074,6 +3005,117 @@ async function editCampaign(id) {
 
 
 
+}
+
+/*
+   DRAWER CADENCE / PROGRESS
+   --------------------------
+   While the drawer is open on a campaign whose status is "sending",
+   this polls GET /api/campaigns/:id/progress every few seconds and
+   updates the progress bar, counts, and Pause/Resume button. The
+   interval is cleared whenever the drawer closes or a different
+   campaign is viewed, so there is never more than one poller
+   running at a time.
+*/
+
+let drawerProgressInterval = null;
+let drawerCampaignId = null;
+
+function formatCadenceLabel(campaign) {
+
+    if (campaign.cadence_mode === "controlled" && campaign.cadence_amount && campaign.cadence_unit) {
+        return `${campaign.cadence_amount} email(s) / ${UNIT_LABEL_FR[campaign.cadence_unit] || campaign.cadence_unit}`;
+    }
+
+    return "Envoi immédiat";
+}
+
+async function refreshDrawerProgress(id) {
+
+    try {
+
+        const response = await fetch(`${API}/campaigns/${id}/progress`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (!response.ok) return;
+
+        const progress = await response.json();
+
+        document.getElementById("drawerSentCount").textContent = progress.sent_count ?? 0;
+        document.getElementById("drawerFailedCount").textContent = progress.failed_count ?? 0;
+        document.getElementById("drawerRemainingCount").textContent = progress.remaining ?? 0;
+        document.getElementById("drawerPercent").textContent = `${progress.percent ?? 0}%`;
+        document.getElementById("drawerProgressFill").style.width = `${progress.percent ?? 0}%`;
+        document.getElementById("drawerCadenceLabel").textContent = formatCadenceLabel(progress);
+
+        document.getElementById("drawerStatusPill").className =
+            `pill pill--${progress.status.toLowerCase()}`;
+        document.getElementById("drawerStatusPill").textContent = progress.status;
+
+        const pauseResumeBtn = document.getElementById("drawerPauseResumeBtn");
+
+        if (progress.status === "sending") {
+
+            pauseResumeBtn.style.display = "flex";
+            pauseResumeBtn.className = "btn-pause-resume pause";
+            pauseResumeBtn.innerHTML = `<i class="fa-solid fa-pause"></i><span>Suspendre la campagne</span>`;
+            pauseResumeBtn.onclick = () => togglePauseResume(id, "pause");
+
+        } else if (progress.status === "paused") {
+
+            pauseResumeBtn.style.display = "flex";
+            pauseResumeBtn.className = "btn-pause-resume resume";
+            pauseResumeBtn.innerHTML = `<i class="fa-solid fa-play"></i><span>Reprendre la campagne</span>`;
+            pauseResumeBtn.onclick = () => togglePauseResume(id, "resume");
+
+        } else {
+
+            pauseResumeBtn.style.display = "none";
+        }
+
+        // Stop polling once the campaign has finished — nothing left
+        // to refresh.
+        if (progress.status === "completed" && drawerProgressInterval) {
+            clearInterval(drawerProgressInterval);
+            drawerProgressInterval = null;
+        }
+
+    } catch (err) {
+
+        console.error("DRAWER PROGRESS ERROR:", err);
+    }
+}
+
+async function togglePauseResume(id, action) {
+
+    try {
+
+        const response = await fetch(`${API}/campaigns/${id}/${action}`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            showToast(result.message || "Action impossible.", "error");
+            return;
+        }
+
+        showToast(
+            action === "pause" ? "Campagne suspendue." : "Campagne reprise.",
+            "success"
+        );
+
+        refreshDrawerProgress(id);
+        loadCampaigns();
+
+    } catch (err) {
+
+        console.error("PAUSE/RESUME ERROR:", err);
+        showToast("Server error", "error");
+    }
 }
 
 async function viewCampaign(id) {
@@ -2120,6 +3162,32 @@ async function viewCampaign(id) {
         document.getElementById("drawerStatusPill").textContent =
             campaign.status;
 
+        // Stop any previous poller before starting a new one for
+        // this campaign.
+        if (drawerProgressInterval) {
+            clearInterval(drawerProgressInterval);
+            drawerProgressInterval = null;
+        }
+
+        const cadenceSection = document.getElementById("drawerCadenceSection");
+        const lifecycleStatuses = ["sending", "paused", "completed", "sent"];
+
+        if (lifecycleStatuses.includes(campaign.status)) {
+
+            cadenceSection.style.display = "block";
+            drawerCampaignId = id;
+
+            refreshDrawerProgress(id);
+
+            if (campaign.status === "sending" || campaign.status === "paused") {
+                drawerProgressInterval = setInterval(() => refreshDrawerProgress(id), 4000);
+            }
+
+        } else {
+
+            cadenceSection.style.display = "none";
+        }
+
         document.getElementById("drawerOverlay").classList.add("show");
         document.getElementById("viewDrawer").classList.add("open");
 
@@ -2139,6 +3207,13 @@ function closeDrawer() {
     document.getElementById("drawerOverlay").classList.remove("show");
     document.getElementById("viewDrawer").classList.remove("open");
 
+    // Stop polling progress once the drawer is closed.
+    if (drawerProgressInterval) {
+        clearInterval(drawerProgressInterval);
+        drawerProgressInterval = null;
+    }
+
+    drawerCampaignId = null;
 }
 
 
@@ -2276,6 +3351,15 @@ document
     renderCampaigns(allCampaigns);
 
 });
+function updateNotificationDot(count) {
+
+    const dot = document.querySelector(".icon-btn .dot");
+
+    if (!dot) return;
+
+    dot.style.display = count > 0 ? "block" : "none";
+}
+
 async function loadNotifications() {
 
     const response = await fetch(`${API}/notifications`, {
@@ -2292,8 +3376,15 @@ async function loadNotifications() {
     const notifications = await response.json();
 
     renderNotifications(notifications);
+    updateNotificationDot(notifications.length);
 
 }
+
+// Reflect the real notification count on the bell as soon as the
+// page loads, rather than always showing a red dot regardless of
+// whether there's anything to see.
+loadNotifications().catch(err => console.error("LOAD NOTIFICATIONS ERROR:", err));
+
 const bell = document.querySelector(".icon-btn");
 const dropdown = document.getElementById("notificationDropdown");
 
@@ -2311,6 +3402,17 @@ function renderNotifications(notifications) {
     const list = document.getElementById("notificationList");
 
     list.innerHTML = "";
+
+    if (!notifications || notifications.length === 0) {
+
+        list.innerHTML = `
+            <div class="p-6 text-center text-sm text-gray-400">
+                No notifications.
+            </div>
+        `;
+
+        return;
+    }
 
     notifications.forEach(notification => {
 
@@ -2338,15 +3440,52 @@ function renderNotifications(notifications) {
 
     });
 
-    document
-.getElementById("clearNotifications")
-.addEventListener("click", () => {
-
-    document.getElementById("notificationList").innerHTML = "";
-
-});
-
 }
+
+/*
+   FIX: "Clear all" — this listener used to be re-attached inside
+   renderNotifications() every single time notifications were
+   rendered, so after opening the bell a few times, one click fired
+   several duplicate handlers. It's now attached exactly once, and
+   it also asks the backend to actually delete the notifications
+   (not just hide them in the DOM) so they don't reappear next time
+   the bell is opened.
+
+   NOTE: this assumes a DELETE ${API}/notifications endpoint exists
+   on your backend, matching the existing GET ${API}/notifications.
+   If you don't have that route yet, share notificationController.js
+   / notificationRoutes.js and I'll add the couple of lines needed —
+   until then this will clear the list visually but they may come
+   back on reload.
+*/
+document
+    .getElementById("clearNotifications")
+    .addEventListener("click", async () => {
+
+        try {
+
+            const response = await fetch(`${API}/notifications`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("Server refused to clear notifications.");
+            }
+
+        } catch (err) {
+
+            console.error("CLEAR NOTIFICATIONS ERROR:", err);
+
+        } finally {
+
+            renderNotifications([]);
+            updateNotificationDot(0);
+        }
+
+    });
 
 async function loadQuestionnaires() {
 
@@ -2450,5 +3589,10 @@ async function loadQuestionnaires() {
 
 </div>
 
+<<<<<<< HEAD:frontend/campaigns/campaigns.html
+=======
+<div class="toast-container" id="toastContainer"></div>
+
+>>>>>>> origin/master:public/campaigns.html
 </body>
 </html>
